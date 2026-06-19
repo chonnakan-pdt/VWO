@@ -1,0 +1,620 @@
+<!-- Strategic Optimization Blueprint — v2 (local + Supabase, roles, content editor, dashboard, report) -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --ink:#1a2332;--bg:#eef1f6;--card:#ffffff;--line:#dde2ec;
+    --navy:#1f2d4d;--navy-soft:#eaeef7;--accent:#e8743b;--accent-soft:#fdeee5;
+    --teal:#0f6e5e;--muted:#6a7488;--good:#1f8a5f;--warn:#c9821f;
+    --l1:#3b6ea5;--l2:#6b4fa0;--l3:#b5602f;--l4:#2f8a76;--l5:#a23b5e;
+    --shadow:0 1px 2px rgba(26,35,50,.05),0 10px 30px rgba(26,35,50,.07);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  body{background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:960px;margin:0 auto;padding:18px 16px 100px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+  .brand{display:flex;flex-direction:column}
+  .brand .kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:800}
+  .brand .title{font-size:18px;font-weight:800;letter-spacing:-.01em}
+  .topbar-right{display:flex;gap:8px;align-items:center}
+  .ghost-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:7px 13px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer}
+  .ghost-btn:active{background:var(--line)}
+  .ghost-btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .mode-badge{font-size:10px;border-radius:999px;padding:3px 9px;font-weight:700;letter-spacing:.04em}
+  .mode-local{background:#fff3d6;color:#8a6a2a;border:1px solid #e8cf94}
+  .mode-live{background:#e3f3ea;color:var(--good);border:1px solid #9fd6b8}
+  .live-dot{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700}
+  .live-dot::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--good);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,138,95,.5)}70%{box-shadow:0 0 0 8px rgba(31,138,95,0)}100%{box-shadow:0 0 0 0 rgba(31,138,95,0)}}
+
+  .hero{background:var(--navy);color:#fff;border-radius:20px;padding:34px 28px;box-shadow:var(--shadow);margin-bottom:22px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(232,116,59,.25),transparent 70%)}
+  .hero .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#9fb0d6;font-weight:700;margin-bottom:10px}
+  .hero h1{font-size:30px;line-height:1.12;letter-spacing:-.02em;margin-bottom:10px;max-width:90%}
+  .hero p{color:#c4cee4;font-size:15px;max-width:80%}
+
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+  input[type=text],input[type=password],textarea,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:#fbfcfe;resize:vertical}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--navy);outline-offset:1px;border-color:var(--navy)}
+  textarea{min-height:90px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);margin-bottom:16px}
+  .card h2{font-size:18px;margin-bottom:4px;letter-spacing:-.01em}
+  .card .sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .primary-btn{width:100%;background:var(--navy);color:#fff;border:none;border-radius:13px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);transition:filter .1s}
+  .primary-btn:active{filter:brightness(.93)}
+  .primary-btn:disabled{opacity:.45;cursor:not-allowed}
+  .accent-btn{background:var(--accent)}
+  .row-btns{display:flex;gap:10px}.row-btns>*{flex:1}
+
+  .rail{display:flex;gap:6px;margin-bottom:22px}
+  .rail .seg{flex:1;height:6px;border-radius:99px;background:var(--line)}
+  .rail .seg.done{background:var(--good)}.rail .seg.active{background:var(--navy)}
+  .level-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .level-badge{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex:none}
+  .lv1{background:var(--l1)}.lv2{background:var(--l2)}.lv3{background:var(--l3)}.lv4{background:var(--l4)}.lv5{background:var(--l5)}
+  .level-head h1{font-size:22px;letter-spacing:-.01em;line-height:1.15}
+  .level-head .lv-sub{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+  .scenario{background:var(--navy-soft);border:1px solid #cdd7ee;border-radius:14px;padding:18px;margin-bottom:20px}
+  .scenario .crisis-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .scenario .headline{font-size:17px;font-weight:800;margin-bottom:10px;line-height:1.3}
+  .scenario p{font-size:14px;color:#3c4763;margin-bottom:8px}
+  .scenario .quote{font-style:italic;color:#54607e;border-left:3px solid var(--accent);padding-left:12px;margin:10px 0}
+  .step{border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;background:#fff;transition:border-color .15s}
+  .step.filled{border-color:var(--good)}
+  .step-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:6px}
+  .step-num{width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex:none}
+  .step.filled .step-num{background:var(--good)}
+  .step-title{font-size:15px;font-weight:800}
+  .step-focus{font-size:12px;color:var(--muted);margin:2px 0 12px 42px}
+  .step .q{font-size:15px;font-weight:700;margin-bottom:10px;color:var(--navy)}
+  .principle{margin-top:12px;background:var(--accent-soft);border-radius:10px;padding:10px 12px;font-size:12.5px;color:#8a4326}
+  .principle b{color:var(--accent);display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+  .taxonomy{background:#f6f8fc;border:1px dashed var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
+  .taxonomy h4{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .tax-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(max-width:560px){.tax-grid{grid-template-columns:1fr}}
+  .tax-item{font-size:12px}.tax-item b{color:var(--navy)}
+  .nav-row{display:flex;gap:10px;margin-top:6px}
+  .nav-row .ghost-btn{flex:none}.nav-row .primary-btn{flex:1}
+  .saved-pill{font-size:12px;color:var(--good);text-align:center;margin-top:10px;font-weight:600}
+  .saved-pill.warn{color:var(--accent)}
+
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+  @media(max-width:560px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+  .stat .big{font-size:26px;font-weight:800;color:var(--navy)}
+  .stat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
+  .dash-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:13px}
+  .dash-table th{background:var(--navy-soft);text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .dash-table td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:middle}
+  .dash-table tr:hover td{background:#fafbfe}
+  .mini-rail{display:flex;gap:3px}
+  .mini-rail span{width:18px;height:6px;border-radius:3px;background:var(--line)}
+  .mini-rail span.on{background:var(--good)}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .pill.done{background:#e3f3ea;color:var(--good)}.pill.prog{background:var(--accent-soft);color:var(--accent)}.pill.idle{background:#eef0f4;color:var(--muted)}
+  .link-btn{background:none;border:none;color:var(--navy);font-weight:700;cursor:pointer;font-size:13px;text-decoration:underline}
+
+  .grp-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
+  .grp-card .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+  .grp-card h3{font-size:16px;color:var(--navy)}
+  .lvl-block{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+  .lvl-block h5{font-size:13px;color:var(--navy);margin-bottom:8px;font-weight:800}
+  .ans-q{font-size:12px;font-weight:700;color:var(--muted);margin-top:8px}
+  .ans-a{font-size:13.5px;white-space:pre-wrap}
+  .final-box{background:var(--navy-soft);border:1px solid #cdd7ee;border-radius:12px;padding:16px;margin-top:14px}
+  .final-box h5{color:var(--navy);font-size:13px;margin-bottom:8px}
+
+  .pin-input{letter-spacing:.3em;text-align:center;font-size:22px}
+  .err{color:#b4452e;font-size:13px;margin-top:8px}
+  .ok{color:var(--good);font-size:13px;margin-top:8px;font-weight:600}
+  .hidden{display:none}
+  .note-banner{background:#fff8ed;border:1px solid #f0d6a8;border-radius:12px;padding:12px 14px;font-size:12.5px;color:#8a6a2a;margin-bottom:18px}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+  .tabs button{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;color:var(--muted)}
+  .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .editor-level{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;background:#fff}
+  .editor-level .eh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .editor-level .eh .level-badge{width:34px;height:34px;font-size:15px;border-radius:9px}
+  .editor-field{margin-bottom:12px}
+  .editor-field label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px}
+  .editor-field input,.editor-field textarea{font-size:14px;padding:9px 11px}
+  .editor-field textarea{min-height:60px}
+  .sticky-save{position:sticky;bottom:14px;z-index:5;margin-top:18px}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <span class="kicker">VWO × Predictive</span>
+      <span class="title">Strategic Optimization Blueprint</span>
+    </div>
+    <div class="topbar-right" id="topRight"></div>
+  </div>
+  <div id="app"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ============================================================
+//  ▼▼▼ ตั้งค่า Supabase (เว้นว่างไว้ = โหมดทดสอบในเครื่อง) ▼▼▼
+// ============================================================
+const SUPABASE_URL  = "https://cxyoeqsnjyefutavjbdc.supabase.co";   // วาง Project URL เมื่อพร้อม deploy (เช่น https://xxx.supabase.co)
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4eW9lcXNuanllZnV0YXZqYmRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NTAwMjMsImV4cCI6MjA5NzQyNjAyM30.qJ8HnDEyXM197rwuzUvkXdXhaVb7mhwBCaW1MBGqJkc";   // วาง anon public key เมื่อพร้อม deploy
+const STAFF_PIN     = "1111";   // PIN สำหรับ Staff (PDT พี่เลี้ยง) — ดู/รีวิว
+const ADMIN_PIN     = "9999";   // PIN สำหรับ Admin — แก้เนื้อหา + dashboard + report
+// ============================================================
+
+// ===== เนื้อหาเริ่มต้น (ค่าตั้งต้น แก้ได้ในหน้า Admin) =====
+const DEFAULT_CONTENT = {
+  taxonomy:[
+    {t:"1. Clarity (ความชัดเจน)",d:"ผู้ใช้เข้าใจ Value Proposition ใน 3 วินาทีแรกหรือไม่?"},
+    {t:"2. Cognitive Load (ภาระความคิด)",d:"มีตัวเลือกมากเกินไปจนเกิด Choice Paralysis หรือไม่?"},
+    {t:"3. Trust Deficit (ความไม่เชื่อมั่น)",d:"มีหลักฐานยืนยันความปลอดภัย (Social Proof) หรือไม่?"},
+    {t:"4. Usability (การใช้งาน)",d:"ปุ่ม CTA สังเกตเห็นง่ายและกดถึงบนมือถือหรือไม่?"}
+  ],
+  steps:[
+    {id:"diagnostic",num:"1",title:"Diagnostic Data",focus:"ระบุจุด Drop-off และพฤติกรรมผิดปกติ",q:"ข้อมูล (Data) บ่งชี้ว่ารอยรั่วอยู่ที่ตำแหน่งใด?",principle:"\"Look for anomalies, not just averages.\" อย่าดูแค่ค่าเฉลี่ย ให้มองหาพฤติกรรมที่ขัดแย้งกัน เช่น เวลาในหน้านาน แต่ CTR ต่ำ = สัญญาณ Friction เชิงซ้อน"},
+    {id:"hypothesis",num:"2",title:"Hypothesis",focus:"วิเคราะห์สาเหตุทางจิตวิทยา (Why?)",q:"ทำไมผู้ใช้จึงหยุดชะงัก และเราจะจูงใจเขาอย่างไร?",principle:"\"Address the root cause, not the symptom.\" แก้ที่ต้นเหตุ การลดสิ่งรบกวน (Distractions) อาจสร้าง Impact มากกว่าการเพิ่มปุ่ม"},
+    {id:"intervention",num:"3",title:"Intervention",focus:"แผนการปรับปรุงหน้าเว็บผ่าน VWO",q:"ระบุตัวแปร (Variables) ที่คุณจะทดสอบปรับแก้?",principle:"\"Variable Isolation is key.\" ทดสอบและปรับเปลี่ยนตัวแปรหลักเพียง 1-2 อย่างต่อแคมเปญ เพื่อรู้ชัดว่าปัจจัยใดคือสิ่งที่เพิ่มยอดขาย"},
+    {id:"measurement",num:"4",title:"Measurement",focus:"ผลกระทบต่อบรรทัดสุดท้าย (Bottom Line)",q:"เราจะตัดสินผู้ชนะจากตัวชี้วัด (Primary KPI) ใด?",principle:"\"Track macro-conversions over micro-conversions.\" ยอดคลิกที่เพิ่มขึ้น (Micro) ไม่มีความหมายหากยอดขาย (Macro) ไม่เพิ่ม"}
+  ],
+  levels:[
+    {n:1,name:"Awareness & Engagement",cls:"lv1",crisis:"เราทุ่มงบ Marketing ไปเยอะมาก แต่คนเข้าหน้าแรกแล้วหายไปเลย",body:"บริษัทอัดงบโฆษณาไป 3 แสนบาทเพื่อดึงคนเข้าหน้า Homepage — Traffic พุ่งขึ้น +40% แต่ยอด Unique Conversions กลับเพิ่มแค่ +3%",quote:"\"เราซื้อ Traffic มาทำไมตั้งเยอะ ในเมื่อคนเข้ามาดูรูปกระเป๋าสีพาสเทลแล้วก็ปิดเว็บหนี? เรากำลังเผาเงินทิ้งชัด ๆ!\" — CFO โวยในที่ประชุม"},
+    {n:2,name:"Consideration & Interest",cls:"lv2",crisis:"คนดูสินค้านานแต่ไม่กดหยิบใส่ตะกร้า",body:"หน้ารายละเอียดสินค้า (PDP) มี Scroll Depth สูง ผู้ใช้อ่านนานเฉลี่ย 2 นาที แต่อัตรา Add-to-Cart ต่ำผิดปกติเมื่อเทียบกับค่ามาตรฐานอุตสาหกรรม",quote:"\"ลูกค้าสนใจจริง อ่านรีวิวหมดทุกอัน แต่ทำไมไม่ยอมกดซื้อ? มันติดอะไรอยู่กันแน่?\" — Product Lead"},
+    {n:3,name:"Conversion & Checkout",cls:"lv3",crisis:"ตะกร้าเต็มแต่ทิ้งกลางคันตอนจ่ายเงิน",body:"Cart Abandonment Rate สูงถึงระดับวิกฤต ผู้ใช้กรอกข้อมูลถึงหน้าชำระเงินแล้วออกจากระบบ โดยเฉพาะบนมือถือ",quote:"\"เราเสียลูกค้าที่ตั้งใจจะซื้ออยู่แล้วในวินาทีสุดท้าย นี่มันเจ็บปวดที่สุด\" — Head of E-commerce"},
+    {n:4,name:"Retention & Loyalty",cls:"lv4",crisis:"ซื้อครั้งเดียวแล้วไม่กลับมาอีก",body:"Repeat Purchase Rate ต่ำ ลูกค้าใหม่เข้ามาเรื่อย ๆ แต่ Lifetime Value ไม่โต อีเมลติดตามหลังการขายมี Open Rate ต่ำ",quote:"\"เราจ่ายค่าหาลูกค้าใหม่แพงขึ้นทุกเดือน แต่ของเก่าหายหมด เหมือนตักน้ำใส่ตะกร้ารั่ว\" — CMO"},
+    {n:5,name:"Advocacy & Growth",cls:"lv5",crisis:"ลูกค้าพอใจแต่ไม่บอกต่อ",body:"คะแนนความพึงพอใจ (CSAT) สูง แต่ Referral / Net Promoter Score ต่ำ โปรแกรมแนะนำเพื่อนแทบไม่มีคนใช้ การเติบโตแบบ Organic หยุดนิ่ง",quote:"\"ลูกค้าชอบเรานะ แต่ไม่มีใครช่วยป่าวประกาศให้ เราโตเองคนเดียวไม่ไหวแล้ว\" — Founder"}
+  ]
+};
+const LV_CLS=["lv1","lv2","lv3","lv4","lv5"];
+
+// ===== โหมดทำงาน =====
+let sb=null;
+const LIVE = (SUPABASE_URL.trim()!=="" && SUPABASE_ANON.trim()!=="" && window.supabase);
+if(LIVE){ sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON); }
+
+// ===== content (โหลดจาก storage/Supabase ได้) =====
+let CONTENT = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+
+// ===== state =====
+let role=null;            // null | 'staff' | 'admin'
+let session=null;         // กลุ่มที่กำลังเล่นในเครื่องนี้
+let viewLevel=1;
+let saveTimer=null;
+let pdtRows=[];
+let adminTab="dashboard"; // dashboard | groups | content
+const app=document.getElementById("app");
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function blankAnswers(){ const lv={}; CONTENT.levels.forEach(l=>lv[l.n]={diagnostic:"",hypothesis:"",intervention:"",measurement:""}); return lv; }
+
+// ============================================================
+//  DATA LAYER — ทำงาน 2 โหมด: local (sessionStorage) / live (Supabase)
+// ============================================================
+function lsGet(k){ try{return sessionStorage.getItem(k)}catch{return null} }
+function lsSet(k,v){ try{sessionStorage.setItem(k,v);return true}catch{return false} }
+function gKey(g){ return "sob:group:"+g; }
+
+// ---- content persistence ----
+async function loadContent(){
+  if(LIVE){
+    try{ const {data}=await sb.from("app_config").select("value").eq("key","content").maybeSingle();
+      if(data&&data.value){ CONTENT=mergeContent(data.value); return; } }catch(e){}
+  } else {
+    const raw=lsGet("sob:content"); if(raw){ try{ CONTENT=mergeContent(JSON.parse(raw)); return; }catch{} }
+  }
+  CONTENT=JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+}
+function mergeContent(v){
+  // กันโครงสร้างพัง: บังคับให้มี 5 level + 4 step เสมอ
+  const c=JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+  if(v.taxonomy&&Array.isArray(v.taxonomy)) v.taxonomy.forEach((x,i)=>{ if(c.taxonomy[i]){c.taxonomy[i].t=x.t||c.taxonomy[i].t;c.taxonomy[i].d=x.d||c.taxonomy[i].d;} });
+  if(v.steps&&Array.isArray(v.steps)) v.steps.forEach((x,i)=>{ if(c.steps[i]){c.steps[i].title=x.title||c.steps[i].title;c.steps[i].focus=x.focus||c.steps[i].focus;c.steps[i].q=x.q||c.steps[i].q;c.steps[i].principle=x.principle||c.steps[i].principle;} });
+  if(v.levels&&Array.isArray(v.levels)) v.levels.forEach((x,i)=>{ if(c.levels[i]){c.levels[i].name=x.name||c.levels[i].name;c.levels[i].crisis=x.crisis||c.levels[i].crisis;c.levels[i].body=x.body||c.levels[i].body;c.levels[i].quote=x.quote||c.levels[i].quote;} });
+  return c;
+}
+async function saveContent(){
+  if(LIVE){
+    try{ await sb.from("app_config").upsert({key:"content",value:CONTENT},{onConflict:"key"}); return true; }catch(e){ return false; }
+  } else { return lsSet("sob:content",JSON.stringify(CONTENT)); }
+}
+
+// ---- group submissions ----
+async function dbGetGroup(g){
+  if(LIVE){ const {data,error}=await sb.from("submissions").select("*").eq("group_no",String(g)).maybeSingle(); if(error)throw error; return data; }
+  const raw=lsGet(gKey(g)); return raw?JSON.parse(raw):null;
+}
+async function dbUpsert(row){
+  if(LIVE){ const {data,error}=await sb.from("submissions").upsert(row,{onConflict:"group_no"}).select().maybeSingle(); if(error)throw error; return data; }
+  lsSet(gKey(row.group_no),JSON.stringify(row)); lsSet("sob:lastgroup",String(row.group_no)); return row;
+}
+async function dbAll(){
+  if(LIVE){ const {data,error}=await sb.from("submissions").select("*").order("group_no",{ascending:true}); if(error)throw error; return data||[]; }
+  const out=[]; try{ for(let i=0;i<sessionStorage.length;i++){ const k=sessionStorage.key(i); if(k&&k.indexOf("sob:group:")===0){ try{out.push(JSON.parse(sessionStorage.getItem(k)))}catch{} } } }catch{}
+  return out.sort((a,b)=>(parseInt(a.group_no)||0)-(parseInt(b.group_no)||0));
+}
+
+// ============================================================
+//  TOP BAR (เปลี่ยนตาม role + โหมด)
+// ============================================================
+function renderTopBar(){
+  const tr=document.getElementById("topRight"); if(!tr) return;
+  const modeBadge = LIVE
+    ? `<span class="live-dot" style="color:var(--good)">Live</span>`
+    : `<span class="mode-badge mode-local">โหมดทดสอบ (ในเครื่อง)</span>`;
+  let btns="";
+  if(role==="admin"){ btns=`<button class="ghost-btn on" onclick="exitRole()">ออกจาก Admin</button>`; }
+  else if(role==="staff"){ btns=`<button class="ghost-btn on" onclick="exitRole()">ออกจาก Staff</button>`; }
+  else { btns=`<button class="ghost-btn" onclick="openLogin()">เจ้าหน้าที่</button>`; }
+  tr.innerHTML=modeBadge+btns;
+}
+
+// ============================================================
+//  ROUTING
+// ============================================================
+function render(){
+  renderTopBar();
+  if(role==="admin"){ renderAdmin(); return; }
+  if(role==="staff"){ renderStaff(); return; }
+  // participant flow
+  if(!session){ renderStart(); return; }
+  if(session.final_done){ renderDone(); return; }
+  if(session.submitted){ renderSubmitted(); return; }
+  renderLevel();
+}
+
+// ===== login (staff/admin) =====
+function openLogin(){
+  app.innerHTML=`<div class="card" style="max-width:380px;margin:24px auto">
+    <h2>เข้าสู่ระบบเจ้าหน้าที่</h2>
+    <div class="sub">ผู้เข้าร่วมตอบคำถามไม่ต้องเข้าสู่ระบบ — เปิดลิงก์แล้วเริ่มได้เลย</div>
+    <div class="field"><label>PIN</label>
+      <input type="password" inputmode="numeric" class="pin-input" id="pin" maxlength="8" placeholder="••••"></div>
+    <div class="err hidden" id="pe">PIN ไม่ถูกต้อง</div>
+    <button class="primary-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <button class="ghost-btn" style="width:100%;margin-top:10px" onclick="role=null;render()">← กลับหน้าผู้เข้าร่วม</button>
+  </div>`;
+}
+function doLogin(){
+  const v=document.getElementById("pin").value;
+  if(v===ADMIN_PIN){ role="admin"; adminTab="dashboard"; loadAdminData(); return; }
+  if(v===STAFF_PIN){ role="staff"; loadStaffData(); return; }
+  document.getElementById("pe").classList.remove("hidden");
+}
+function exitRole(){ teardownRealtime(); role=null; session=null; render(); }
+
+// ============================================================
+//  PARTICIPANT — start
+// ============================================================
+function renderStart(){
+  app.innerHTML=`
+    <div class="hero"><div class="eyebrow">Growth Intelligence & Testing Framework</div>
+      <h1>วินิจฉัยวิกฤต เพิ่ม Conversion ใน 5 ด่าน</h1>
+      <p>สวมบทที่ปรึกษา วิเคราะห์ปัญหาเว็บไซต์ทีละด่านตาม framework แล้วส่งให้พี่เลี้ยงรีวิว</p></div>
+    <div class="card"><h2>เริ่มต้น</h2><div class="sub">กรอกข้อมูลทีมก่อนเข้าสู่ด่านแรก</div>
+      <div class="field"><label>ชื่อองค์กร / บริษัท</label><input type="text" id="org" placeholder="เช่น บริษัท ABC จำกัด"></div>
+      <div class="field"><label>หมายเลขกลุ่ม</label><input type="text" id="grp" placeholder="เช่น 1, 2, 3…"></div>
+      <div class="err hidden" id="startErr"></div>
+      <button class="primary-btn" id="startBtn" onclick="startGame()">เริ่มภารกิจ →</button>
+    </div>`;
+}
+async function startGame(){
+  const org=document.getElementById("org").value.trim();
+  const grp=document.getElementById("grp").value.trim();
+  const err=document.getElementById("startErr");
+  if(!org||!grp){ err.textContent="กรุณากรอกชื่อองค์กรและหมายเลขกลุ่ม"; err.classList.remove("hidden"); return; }
+  const btn=document.getElementById("startBtn"); btn.disabled=true; btn.textContent="กำลังเริ่ม…";
+  try{
+    let row=await dbGetGroup(grp);
+    if(!row){ row=await dbUpsert({group_no:String(grp),org_name:org,answers:blankAnswers(),submitted:false,final_suggestion:"",final_done:false}); }
+    else if(row.org_name!==org){ row.org_name=org; row=await dbUpsert(row); }
+    session=row; viewLevel=1; render();
+  }catch(e){ err.textContent="เริ่มไม่สำเร็จ: "+(e.message||e); err.classList.remove("hidden"); btn.disabled=false; btn.textContent="เริ่มภารกิจ →"; }
+}
+
+// ===== participant — level =====
+function levelComplete(n){ const d=session.answers[n]; return d&&d.diagnostic.trim()&&d.hypothesis.trim()&&d.intervention.trim()&&d.measurement.trim(); }
+function renderLevel(){
+  const L=CONTENT.levels[viewLevel-1]; const d=session.answers[viewLevel];
+  let rail=`<div class="rail">`;
+  for(let i=1;i<=5;i++){ const c=(levelComplete(i)?'done':'')+(i===viewLevel?' active':''); rail+=`<div class="seg ${c.trim()}"></div>`; }
+  rail+=`</div>`;
+  let steps="";
+  CONTENT.steps.forEach(s=>{ const val=d[s.id];
+    steps+=`<div class="step ${val.trim()?'filled':''}">
+      <div class="step-head"><div class="step-num">${s.num}</div><div><div class="step-title">${esc(s.title)}</div></div></div>
+      <div class="step-focus">Focus: ${esc(s.focus)}</div>
+      <div class="q">Q: ${esc(s.q)}</div>
+      <textarea placeholder="พิมพ์คำตอบของทีม…" oninput="onAns('${s.id}',this.value)">${esc(val)}</textarea>
+      <div class="principle"><b>Consulting Principle</b>${esc(s.principle)}</div></div>`;
+  });
+  let tax=`<div class="taxonomy"><h4>Universal Friction Taxonomy — เกณฑ์วิเคราะห์จุดสะดุด</h4><div class="tax-grid">`;
+  CONTENT.taxonomy.forEach(x=>tax+=`<div class="tax-item"><b>${esc(x.t)}</b><br>${esc(x.d)}</div>`); tax+=`</div></div>`;
+  const isLast=viewLevel===5, canNext=levelComplete(viewLevel);
+  app.innerHTML=`${rail}
+    <div class="level-head"><div class="level-badge ${LV_CLS[viewLevel-1]}">${viewLevel}</div>
+      <div><div class="lv-sub">Level ${viewLevel} / 5</div><h1>${esc(L.name)}</h1></div></div>
+    <div class="scenario"><div class="crisis-label">⚠ Business Crisis</div>
+      <div class="headline">"${esc(L.crisis)}"</div><p>${esc(L.body)}</p><div class="quote">${esc(L.quote)}</div></div>
+    ${tax}${steps}
+    <div class="nav-row">
+      ${viewLevel>1?`<button class="ghost-btn" onclick="prevLevel()">← ด่านก่อน</button>`:''}
+      ${isLast?`<button class="primary-btn accent-btn" ${canNext?'':'disabled'} onclick="finalSubmit()">ส่งคำตอบทั้งหมด (Submit) ✓</button>`
+              :`<button class="primary-btn" ${canNext?'':'disabled'} onclick="nextLevel()">ด่านถัดไป →</button>`}</div>
+    <div class="saved-pill" id="saveStatus">${canNext?'✓ ด่านนี้ครบแล้ว':'กรอกให้ครบ 4 ข้อเพื่อไปต่อ'}</div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function onAns(stepId,v){
+  session.answers[viewLevel][stepId]=v;
+  const btn=document.querySelector('.nav-row .primary-btn'); if(btn) btn.disabled=!levelComplete(viewLevel);
+  scheduleSave();
+}
+function scheduleSave(){
+  const s=document.getElementById("saveStatus"); if(s){s.textContent="กำลังบันทึก…";s.classList.remove("warn");}
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    try{ await dbUpsert(currentRow()); if(s){s.textContent="✓ บันทึกแล้ว";s.classList.remove("warn");} }
+    catch(e){ if(s){s.textContent="⚠ บันทึกไม่สำเร็จ จะลองใหม่";s.classList.add("warn");} scheduleSave(); }
+  },650);
+}
+function currentRow(){ return {group_no:session.group_no,org_name:session.org_name,answers:session.answers,submitted:session.submitted,final_suggestion:session.final_suggestion,final_done:session.final_done}; }
+function nextLevel(){ if(viewLevel<5){viewLevel++;render();} }
+function prevLevel(){ if(viewLevel>1){viewLevel--;render();} }
+async function finalSubmit(){ session.submitted=true; try{await dbUpsert(currentRow())}catch(e){} render(); }
+
+function renderSubmitted(){
+  app.innerHTML=`<div class="hero"><div class="eyebrow">Submission Complete</div>
+    <h1>ส่งคำตอบครบ 5 ด่านแล้ว 🎉</h1>
+    <p>กลุ่ม ${esc(session.group_no)} · ${esc(session.org_name)} — พี่เลี้ยงจะรีวิวและให้ Final Suggestion</p></div>
+    <div class="card"><h2>เรียบร้อย</h2>
+      <div class="sub">คำตอบของกลุ่มถูกบันทึกแล้ว${LIVE?' พี่เลี้ยงเห็นทันทีแบบเรียลไทม์':''}</div>
+      <button class="ghost-btn" style="width:100%" onclick="resetGame()">เริ่มกลุ่มใหม่ในเครื่องนี้</button></div>`;
+}
+function renderDone(){
+  app.innerHTML=`<div class="hero"><div class="eyebrow">Finalized</div>
+    <h1>เสร็จสมบูรณ์ ✓</h1><p>พี่เลี้ยงได้ส่ง Final Suggestion สำหรับกลุ่ม ${esc(session.group_no)} แล้ว</p></div>
+    <div class="card"><h2>Final Suggestion จากพี่เลี้ยง</h2>
+    <div class="ans-a" style="margin-top:8px">${esc(session.final_suggestion)}</div>
+    <button class="ghost-btn" style="margin-top:16px;width:100%" onclick="resetGame()">เริ่มกลุ่มใหม่</button></div>`;
+}
+function resetGame(){ session=null; try{sessionStorage.removeItem("sob:lastgroup")}catch{}; render(); }
+
+// ============================================================
+//  REALTIME (เฉพาะโหมด live)
+// ============================================================
+let rtChannel=null;
+function setupRealtime(onChange){
+  if(!LIVE||rtChannel) return;
+  rtChannel=sb.channel("sob-rt")
+    .on("postgres_changes",{event:"*",schema:"public",table:"submissions"},async()=>{ try{ pdtRows=await dbAll(); onChange(); }catch(e){} })
+    .subscribe();
+}
+function teardownRealtime(){ if(rtChannel&&sb){ sb.removeChannel(rtChannel); rtChannel=null; } }
+
+// ============================================================
+//  STAFF (PDT พี่เลี้ยง) — ดู dashboard + รีวิวกลุ่ม + final suggestion (แก้เนื้อหาไม่ได้)
+// ============================================================
+async function loadStaffData(){
+  app.innerHTML=`<div class="card"><div class="sub">กำลังโหลดข้อมูล…</div></div>`;
+  try{ pdtRows=await dbAll(); }catch(e){ pdtRows=[]; }
+  setupRealtime(()=>{ if(role==="staff") renderStaff(true); });
+  renderStaff();
+}
+function statsFrom(rows){
+  const submitted=rows.filter(r=>r.submitted).length;
+  const finalized=rows.filter(r=>r.final_done).length;
+  let levelsFilled=0; rows.forEach(r=>{ for(let i=1;i<=5;i++){ const d=r.answers&&r.answers[i]; if(d&&d.diagnostic&&d.hypothesis&&d.intervention&&d.measurement) levelsFilled++; } });
+  return {total:rows.length,submitted,finalized,levelsFilled};
+}
+function dashTable(rows,withReview){
+  let h=`<table class="dash-table"><thead><tr><th>กลุ่ม</th><th>องค์กร</th><th>ความคืบหน้า</th><th>สถานะ</th><th></th></tr></thead><tbody>`;
+  rows.forEach(r=>{
+    let done=0; for(let i=1;i<=5;i++){ const d=r.answers&&r.answers[i]; if(d&&d.diagnostic&&d.hypothesis&&d.intervention&&d.measurement) done++; }
+    let mini=`<div class="mini-rail">`; for(let i=1;i<=5;i++) mini+=`<span class="${i<=done?'on':''}"></span>`; mini+=`</div>`;
+    const status=r.final_done?'<span class="pill done">รีวิวแล้ว</span>':(r.submitted?'<span class="pill prog">รอรีวิว</span>':'<span class="pill idle">กำลังทำ</span>');
+    h+=`<tr><td><b>${esc(r.group_no)}</b></td><td>${esc(r.org_name||'—')}</td><td>${mini}<span style="font-size:11px;color:var(--muted)"> ${done}/5</span></td><td>${status}</td>
+      <td>${withReview?`<button class="link-btn" onclick="openGroupDetail('${esc(r.group_no)}')">ดู/รีวิว →</button>`:''}</td></tr>`;
+  });
+  h+=`</tbody></table>`; return h;
+}
+function renderStaff(keep){
+  const sy=keep?window.scrollY:0;
+  const s=statsFrom(pdtRows);
+  app.innerHTML=`
+    <div class="note-banner">โหมด Staff (พี่เลี้ยง/PDT): ดูความคืบหน้าทุกกลุ่ม รีวิว และให้ Final Suggestion ${LIVE?'· อัปเดตสดเรียลไทม์':'· (โหมดทดสอบในเครื่อง)'}</div>
+    <div class="stat-row">
+      <div class="stat"><div class="big">${s.total}</div><div class="lbl">กลุ่มทั้งหมด</div></div>
+      <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว</div></div>
+      <div class="stat"><div class="big">${s.finalized}</div><div class="lbl">รีวิวแล้ว</div></div>
+      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">ด่านที่เสร็จรวม</div></div>
+    </div>
+    ${pdtRows.length?dashTable(pdtRows,true):'<div class="card"><div class="sub">ยังไม่มีกลุ่มเริ่มทำ</div></div>'}`;
+  if(keep) window.scrollTo(0,sy);
+}
+
+// ดูรายละเอียด + รีวิวกลุ่มเดียว (ใช้ร่วมทั้ง staff/admin)
+function openGroupDetail(groupNo){
+  const g=pdtRows.find(r=>String(r.group_no)===String(groupNo)); if(!g) return;
+  const done=g.final_done;
+  let body=`<button class="ghost-btn" style="margin-bottom:14px" onclick="${role==='admin'?'renderAdmin()':'renderStaff()'}">← กลับ</button>
+    <div class="grp-card"><div class="gh"><h3>กลุ่ม ${esc(g.group_no)} · ${esc(g.org_name||'')}</h3>
+      <span class="pill ${done?'done':(g.submitted?'prog':'idle')}">${done?'รีวิวแล้ว':(g.submitted?'รอรีวิว':'กำลังทำ')}</span></div>`;
+  CONTENT.levels.forEach(L=>{ const d=g.answers&&g.answers[L.n]; if(!d) return;
+    body+=`<div class="lvl-block"><h5>Level ${L.n}: ${esc(L.name)}</h5>`;
+    CONTENT.steps.forEach(s=>{ body+=`<div class="ans-q">${s.num}. ${esc(s.title)}</div><div class="ans-a">${d[s.id]?esc(d[s.id]):'<span style="color:#bbb">—</span>'}</div>`; });
+    body+=`</div>`;
+  });
+  if(done){ body+=`<div class="final-box"><h5>Final Suggestion (ส่งแล้ว)</h5><div class="ans-a">${esc(g.final_suggestion)}</div></div>`; }
+  else{ body+=`<div class="final-box"><h5>Final Suggestion</h5>
+    <textarea id="fs_box" placeholder="สรุปคำแนะนำสุดท้ายให้กลุ่มนี้…">${esc(g.final_suggestion||'')}</textarea>
+    <button class="primary-btn accent-btn" style="margin-top:10px" onclick="finalizeGroup('${esc(g.group_no)}')">Final Submit ให้กลุ่ม ${esc(g.group_no)}</button></div>`; }
+  body+=`</div>`;
+  app.innerHTML=body; window.scrollTo({top:0,behavior:'smooth'});
+}
+async function finalizeGroup(groupNo){
+  const v=(document.getElementById("fs_box").value||"").trim();
+  if(!v){ alert("กรุณาใส่ Final Suggestion ก่อน"); return; }
+  const row=pdtRows.find(r=>String(r.group_no)===String(groupNo)); if(!row) return;
+  try{
+    await dbUpsert({group_no:row.group_no,org_name:row.org_name,answers:row.answers,submitted:row.submitted,final_suggestion:v,final_done:true});
+    pdtRows=await dbAll();
+    role==='admin'?renderAdmin():renderStaff();
+  }catch(e){ alert("บันทึกไม่สำเร็จ: "+(e.message||e)); }
+}
+
+// ============================================================
+//  ADMIN — tabs: dashboard / groups / content editor / report
+// ============================================================
+async function loadAdminData(){
+  app.innerHTML=`<div class="card"><div class="sub">กำลังโหลด…</div></div>`;
+  try{ pdtRows=await dbAll(); }catch(e){ pdtRows=[]; }
+  setupRealtime(()=>{ if(role==="admin"&&(adminTab==="dashboard"||adminTab==="groups")) renderAdmin(true); });
+  renderAdmin();
+}
+function adminTabs(){
+  const t=(id,label)=>`<button class="${adminTab===id?'on':''}" onclick="setAdminTab('${id}')">${label}</button>`;
+  return `<div class="tabs">${t('dashboard','📊 Dashboard')}${t('groups','📋 คำตอบรายกลุ่ม')}${t('content','✏️ แก้เนื้อหา')}${t('report','⬇️ Report')}</div>`;
+}
+function setAdminTab(t){ adminTab=t; renderAdmin(); }
+function renderAdmin(keep){
+  const sy=keep?window.scrollY:0;
+  let inner="";
+  if(adminTab==="dashboard") inner=adminDashboard();
+  else if(adminTab==="groups") inner=adminGroups();
+  else if(adminTab==="content") inner=adminContent();
+  else if(adminTab==="report") inner=adminReport();
+  app.innerHTML=adminTabs()+inner;
+  if(keep) window.scrollTo(0,sy);
+}
+
+function adminDashboard(){
+  const s=statsFrom(pdtRows);
+  const pct=s.total?Math.round((s.finalized/s.total)*100):0;
+  return `<div class="note-banner">โหมด Admin: ภาพรวมทั้งงาน ${LIVE?'· เรียลไทม์':'· (โหมดทดสอบในเครื่อง)'}</div>
+    <div class="stat-row">
+      <div class="stat"><div class="big">${s.total}</div><div class="lbl">กลุ่มทั้งหมด</div></div>
+      <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว</div></div>
+      <div class="stat"><div class="big">${s.finalized}</div><div class="lbl">รีวิวแล้ว (${pct}%)</div></div>
+      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">ด่านเสร็จรวม</div></div>
+    </div>
+    ${pdtRows.length?dashTable(pdtRows,true):'<div class="card"><div class="sub">ยังไม่มีกลุ่มเริ่มทำ</div></div>'}`;
+}
+function adminGroups(){
+  if(!pdtRows.length) return `<div class="card"><div class="sub">ยังไม่มีคำตอบ</div></div>`;
+  let h="";
+  pdtRows.forEach(g=>{
+    const done=g.final_done;
+    h+=`<div class="grp-card"><div class="gh"><h3>กลุ่ม ${esc(g.group_no)} · ${esc(g.org_name||'')}</h3>
+      <span class="pill ${done?'done':(g.submitted?'prog':'idle')}">${done?'รีวิวแล้ว':(g.submitted?'รอรีวิว':'กำลังทำ')}</span></div>`;
+    CONTENT.levels.forEach(L=>{ const d=g.answers&&g.answers[L.n]; if(!d) return;
+      h+=`<div class="lvl-block"><h5>Level ${L.n}: ${esc(L.name)}</h5>`;
+      CONTENT.steps.forEach(s=>{ h+=`<div class="ans-q">${s.num}. ${esc(s.title)}</div><div class="ans-a">${d[s.id]?esc(d[s.id]):'<span style="color:#bbb">—</span>'}</div>`; });
+      h+=`</div>`;
+    });
+    if(done) h+=`<div class="final-box"><h5>Final Suggestion</h5><div class="ans-a">${esc(g.final_suggestion)}</div></div>`;
+    else h+=`<div style="margin-top:12px"><button class="ghost-btn" onclick="openGroupDetail('${esc(g.group_no)}')">เปิดรีวิว / ใส่ Final Suggestion →</button></div>`;
+    h+=`</div>`;
+  });
+  return h;
+}
+
+// ===== Content editor =====
+function adminContent(){
+  let h=`<div class="note-banner">แก้ข้อความให้เข้ากับงาน Event ได้ทุกช่อง · โครงสร้าง 5 ด่าน × 4 ขั้น framework ถูกล็อกไว้เพื่อให้ระบบและ dashboard ทำงานถูกต้อง · กดบันทึกแล้วผู้เข้าร่วมเห็นเนื้อหาใหม่ทันที</div>`;
+
+  // framework steps (4 ขั้น)
+  h+=`<div class="card"><h2>4 ขั้นของ Framework (ใช้ทุกด่าน)</h2><div class="sub">หัวข้อ / Focus / คำถาม / Consulting Principle</div>`;
+  CONTENT.steps.forEach((s,i)=>{
+    h+=`<div class="editor-level"><div class="eh"><div class="step-num">${s.num}</div><b>${esc(s.title)}</b></div>
+      <div class="editor-field"><label>หัวข้อ</label><input type="text" id="st_title_${i}" value="${esc(s.title)}"></div>
+      <div class="editor-field"><label>Focus</label><input type="text" id="st_focus_${i}" value="${esc(s.focus)}"></div>
+      <div class="editor-field"><label>คำถาม (Q)</label><textarea id="st_q_${i}">${esc(s.q)}</textarea></div>
+      <div class="editor-field"><label>Consulting Principle</label><textarea id="st_pr_${i}">${esc(s.principle)}</textarea></div></div>`;
+  });
+  h+=`</div>`;
+
+  // taxonomy
+  h+=`<div class="card"><h2>Universal Friction Taxonomy</h2><div class="sub">เกณฑ์วิเคราะห์จุดสะดุด 4 ข้อ</div>`;
+  CONTENT.taxonomy.forEach((x,i)=>{
+    h+=`<div class="editor-field"><label>หัวข้อ ${i+1}</label><input type="text" id="tx_t_${i}" value="${esc(x.t)}"></div>
+      <div class="editor-field"><label>คำอธิบาย ${i+1}</label><textarea id="tx_d_${i}">${esc(x.d)}</textarea></div>`;
+  });
+  h+=`</div>`;
+
+  // levels (5)
+  h+=`<div class="card"><h2>เนื้อหา 5 ด่าน (Business Crisis)</h2><div class="sub">ชื่อด่าน / พาดหัววิกฤต / รายละเอียด / Quote</div>`;
+  CONTENT.levels.forEach((L,i)=>{
+    h+=`<div class="editor-level"><div class="eh"><div class="level-badge ${LV_CLS[i]}">${i+1}</div><b>Level ${i+1}</b></div>
+      <div class="editor-field"><label>ชื่อด่าน</label><input type="text" id="lv_name_${i}" value="${esc(L.name)}"></div>
+      <div class="editor-field"><label>พาดหัววิกฤต (Headline)</label><textarea id="lv_crisis_${i}">${esc(L.crisis)}</textarea></div>
+      <div class="editor-field"><label>รายละเอียดสถานการณ์</label><textarea id="lv_body_${i}">${esc(L.body)}</textarea></div>
+      <div class="editor-field"><label>Quote</label><textarea id="lv_quote_${i}">${esc(L.quote)}</textarea></div></div>`;
+  });
+  h+=`</div>`;
+
+  h+=`<div class="sticky-save"><button class="primary-btn" onclick="saveContentEdits()">💾 บันทึกเนื้อหา</button>
+    <div class="ok hidden" id="contentSaved" style="text-align:center">✓ บันทึกแล้ว ผู้เข้าร่วมจะเห็นเนื้อหาใหม่</div>
+    <button class="ghost-btn" style="width:100%;margin-top:10px" onclick="resetContentDefaults()">คืนค่าเริ่มต้น</button></div>`;
+  return h;
+}
+async function saveContentEdits(){
+  CONTENT.steps.forEach((s,i)=>{ s.title=val("st_title_"+i,s.title); s.focus=val("st_focus_"+i,s.focus); s.q=val("st_q_"+i,s.q); s.principle=val("st_pr_"+i,s.principle); });
+  CONTENT.taxonomy.forEach((x,i)=>{ x.t=val("tx_t_"+i,x.t); x.d=val("tx_d_"+i,x.d); });
+  CONTENT.levels.forEach((L,i)=>{ L.name=val("lv_name_"+i,L.name); L.crisis=val("lv_crisis_"+i,L.crisis); L.body=val("lv_body_"+i,L.body); L.quote=val("lv_quote_"+i,L.quote); });
+  const ok=await saveContent();
+  const m=document.getElementById("contentSaved"); if(m){ m.textContent=ok?"✓ บันทึกแล้ว ผู้เข้าร่วมจะเห็นเนื้อหาใหม่":"⚠ บันทึกไม่สำเร็จ"; m.classList.remove("hidden"); }
+}
+function val(id,fb){ const el=document.getElementById(id); return el?el.value:fb; }
+async function resetContentDefaults(){
+  if(!confirm("คืนค่าเนื้อหาทั้งหมดกลับเป็นค่าเริ่มต้น?")) return;
+  CONTENT=JSON.parse(JSON.stringify(DEFAULT_CONTENT)); await saveContent(); renderAdmin();
+}
+
+// ===== Report (CSV summary) =====
+function adminReport(){
+  const s=statsFrom(pdtRows);
+  return `<div class="card"><h2>Report สรุปผล</h2>
+    <div class="sub">ดึงคำตอบทุกกลุ่มออกเป็นไฟล์ เพื่อทำ Survey / สรุปต่อยอด</div>
+    <div class="stat-row" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat"><div class="big">${s.total}</div><div class="lbl">กลุ่ม</div></div>
+      <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว</div></div>
+      <div class="stat"><div class="big">${s.finalized}</div><div class="lbl">รีวิวแล้ว</div></div>
+    </div>
+    <div class="row-btns">
+      <button class="primary-btn" onclick="downloadCSV()">⬇️ ดาวน์โหลด CSV (แตกทุกข้อ)</button>
+    </div>
+    <button class="ghost-btn" style="width:100%;margin-top:10px" onclick="downloadJSON()">⬇️ ดาวน์โหลด JSON (ข้อมูลดิบ)</button>
+    <div class="sub" style="margin-top:14px">CSV เปิดใน Excel/Google Sheets ได้ทันที แต่ละด่าน × 4 ข้อ จะถูกแตกเป็นคอลัมน์แยก พร้อม Final Suggestion ของพี่เลี้ยง</div>
+  </div>`;
+}
+function buildCSVRows(){
+  const cols=["กลุ่ม","องค์กร","สถานะ"];
+  CONTENT.levels.forEach((L,li)=>{ CONTENT.steps.forEach(s=>{ cols.push(`L${li+1} ${L.name} - ${s.title}`); }); });
+  cols.push("Final Suggestion (พี่เลี้ยง)");
+  const rows=[cols];
+  pdtRows.forEach(g=>{
+    const status=g.final_done?"รีวิวแล้ว":(g.submitted?"ส่งแล้ว":"กำลังทำ");
+    const row=[g.group_no,g.org_name||"",status];
+    CONTENT.levels.forEach(L=>{ const d=(g.answers&&g.answers[L.n])||{}; CONTENT.steps.forEach(s=>row.push(d[s.id]||"")); });
+    row.push(g.final_suggestion||"");
+    rows.push(row);
+  });
+  return rows;
+}
+function downloadCSV(){
+  const rows=buildCSVRows();
+  const csv="\uFEFF"+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  dl(new Blob([csv],{type:"text/csv;charset=utf-8"}),"strategic-blueprint-report.csv");
+}
+function downloadJSON(){
+  dl(new Blob([JSON.stringify(pdtRows,null,2)],{type:"application/json"}),"strategic-blueprint-data.json");
+}
+function dl(blob,name){ const u=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u); }
+
+// ============================================================
+//  BOOT
+// ============================================================
+(async function(){ await loadContent(); render(); })();
+</script>
