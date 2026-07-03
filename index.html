@@ -176,8 +176,8 @@
 // ============================================================
 //  ▼▼▼ ตั้งค่า Supabase (เว้นว่างไว้ = โหมดทดสอบในเครื่อง) ▼▼▼
 // ============================================================
-const SUPABASE_URL  = "https://cxyoeqsnjyefutavjbdc.supabase.co";   // วาง Project URL เมื่อพร้อม deploy (เช่น https://xxx.supabase.co)
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4eW9lcXNuanllZnV0YXZqYmRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NTAwMjMsImV4cCI6MjA5NzQyNjAyM30.qJ8HnDEyXM197rwuzUvkXdXhaVb7mhwBCaW1MBGqJkc";   // วาง anon public key เมื่อพร้อม deploy
+const SUPABASE_URL  = "";   // วาง Project URL เมื่อพร้อม deploy (เช่น https://xxx.supabase.co)
+const SUPABASE_ANON = "";   // วาง anon public key เมื่อพร้อม deploy
 const STAFF_PIN     = "1111";   // PIN สำหรับ Staff (PDT พี่เลี้ยง) — ดู/รีวิว
 const ADMIN_PIN     = "9999";   // PIN สำหรับ Admin — แก้เนื้อหา + dashboard + report
 // ============================================================
@@ -192,8 +192,8 @@ const DEFAULT_CONTENT = {
     eyebrowTop:"VWO × Predictive",
     systemTitle:"Strategic Optimization Blueprint",
     heroEyebrow:"Growth Intelligence & Testing Framework",
-    heroTitle:"วินิจฉัยวิกฤต เพิ่ม Conversion ใน 5 ด่าน",
-    heroSubtitle:"สวมบทที่ปรึกษา วิเคราะห์ปัญหาเว็บไซต์ทีละด่านตาม framework แล้วส่งให้พี่เลี้ยงรีวิว"
+    heroTitle:"วินิจฉัยวิกฤต เพิ่ม Conversion ใน 5 Level",
+    heroSubtitle:"สวมบทที่ปรึกษา วิเคราะห์ปัญหาเว็บไซต์ทีละ Level ตาม framework แล้วส่งให้พี่เลี้ยงรีวิว"
   },
   steps:[
     {id:"diagnostic",num:"1",title:"Diagnostic Data",icon:"search",focus:"จุดที่พบพฤติกรรมผิดปกติจากข้อมูล",principle:"\"Look for anomalies, not just averages.\" อย่าดูแค่ค่าเฉลี่ย ให้มองหาพฤติกรรมที่ขัดแย้งกัน เช่น เวลาในหน้านาน แต่ CTR ต่ำ = สัญญาณ Friction เชิงซ้อน"},
@@ -349,7 +349,7 @@ function renderStart(){
     <div class="hero"><div class="hero-logos"><img class="hero-logo show" alt="Predictive" src="${LOGO_SRC}"><span class="hero-logo-sep"></span><img class="hero-logo-vwo show" alt="VWO ABTasty" src="${VWOABT_SRC}"></div><div class="eyebrow">${esc(CONTENT.hero.heroEyebrow)}</div>
       <h1>${esc(CONTENT.hero.heroTitle)}</h1>
       <p>${esc(CONTENT.hero.heroSubtitle)}</p></div>
-    <div class="card"><h2>เริ่มต้น</h2><div class="sub">กรอกข้อมูลทีมก่อนเข้าสู่ด่านแรก</div>
+    <div class="card"><h2>เริ่มต้น</h2><div class="sub">กรอกข้อมูลทีมก่อนเข้าสู่ Level แรก</div>
       <div class="field"><label>ชื่อองค์กร / บริษัท</label><input type="text" id="org" placeholder="เช่น บริษัท ABC จำกัด"></div>
       <div class="field"><label>หมายเลขกลุ่ม</label><input type="text" id="grp" placeholder="เช่น 1, 2, 3…"></div>
       <div class="err hidden" id="startErr"></div>
@@ -394,10 +394,10 @@ function renderLevel(){
       <div class="headline">"${esc(L.crisis)}"</div><p>${esc(L.body)}</p><div class="quote">${esc(L.quote)}</div></div>
     ${steps}
     <div class="nav-row">
-      ${viewLevel>1?`<button class="ghost-btn" onclick="prevLevel()">← ด่านก่อน</button>`:''}
+      ${viewLevel>1?`<button class="ghost-btn" onclick="prevLevel()">← Level ก่อน</button>`:''}
       ${isLast?`<button class="primary-btn accent-btn" ${canNext?'':'disabled'} onclick="finalSubmit()">ส่งคำตอบทั้งหมด (Submit) ✓</button>`
-              :`<button class="primary-btn" ${canNext?'':'disabled'} onclick="nextLevel()">ด่านถัดไป →</button>`}</div>
-    <div class="saved-pill" id="saveStatus">${canNext?'✓ ด่านนี้ครบแล้ว':'กรอกให้ครบ 4 ช่องเพื่อไปต่อ'}</div>`;
+              :`<button class="primary-btn" ${canNext?'':'disabled'} onclick="nextLevel()">Level ถัดไป →</button>`}</div>
+    <div class="saved-pill" id="saveStatus">${canNext?'✓ Level นี้ครบแล้ว':'กรอกให้ครบ 4 ช่องเพื่อไปต่อ'}</div>`;
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function onAns(stepId,v){
@@ -420,10 +420,10 @@ async function finalSubmit(){ session.submitted=true; try{await dbUpsert(current
 
 function renderSubmitted(){
   app.innerHTML=`<div class="hero"><div class="eyebrow">Submission Complete</div>
-    <h1>ส่งคำตอบครบ 5 ด่านแล้ว 🎉</h1>
-    <p>กลุ่ม ${esc(session.group_no)} · ${esc(session.org_name)} — พี่เลี้ยงจะรีวิวและให้ Final Suggestion</p></div>
+    <h1>ส่งคำตอบครบทั้ง 5 Level แล้วครับ 🎉</h1>
+    <p>กลุ่ม ${esc(session.group_no)}, ${esc(session.org_name)}, ทางทีมผู้เชี่ยวชาญจาก Predictive จะทำการเพิ่มข้อแนะนำ (Final Suggestions) อีกครั้งใน Final Report </p></div>
     <div class="card"><h2>เรียบร้อย</h2>
-      <div class="sub">คำตอบของกลุ่มถูกบันทึกแล้ว${LIVE?' พี่เลี้ยงเห็นทันทีแบบเรียลไทม์':''}</div>
+      <div class="sub">คำตอบของกลุ่มที่ ${esc(session.group_no)} บริษัท ${esc(session.org_name)} ถูกบันทึกเรียบร้อยแล้วครับ${LIVE?' พี่เลี้ยงเห็นทันทีแบบเรียลไทม์':''}</div>
       <button class="ghost-btn" style="width:100%" onclick="resetGame()">เริ่มกลุ่มใหม่ในเครื่องนี้</button></div>`;
 }
 function renderDone(){
@@ -482,7 +482,7 @@ function renderStaff(keep){
       <div class="stat"><div class="big">${s.total}</div><div class="lbl">กลุ่มทั้งหมด</div></div>
       <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว</div></div>
       <div class="stat"><div class="big">${s.finalized}</div><div class="lbl">รีวิวแล้ว</div></div>
-      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">ด่านที่เสร็จรวม</div></div>
+      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">Level ที่เสร็จรวม</div></div>
     </div>
     ${pdtRows.length?dashTable(pdtRows,true):'<div class="card"><div class="sub">ยังไม่มีกลุ่มเริ่มทำ</div></div>'}`;
   if(keep) window.scrollTo(0,sy);
@@ -658,7 +658,7 @@ function adminDashboard(){
       <div class="stat"><div class="big">${s.total}</div><div class="lbl">กลุ่มทั้งหมด</div></div>
       <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว</div></div>
       <div class="stat"><div class="big">${s.finalized}</div><div class="lbl">รีวิวแล้ว (${pct}%)</div></div>
-      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">ด่านเสร็จรวม</div></div>
+      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">Level เสร็จรวม</div></div>
     </div>
     ${pdtRows.length?dashTable(pdtRows,true):'<div class="card"><div class="sub">ยังไม่มีกลุ่มเริ่มทำ</div></div>'}`;
 }
@@ -683,7 +683,7 @@ function adminGroups(){
 
 // ===== Content editor =====
 function adminContent(){
-  let h=`<div class="note-banner">แก้ข้อความให้เข้ากับงาน Event ได้ทุกช่อง · โครงสร้าง 5 ด่าน × 4 ขั้น framework ถูกล็อกไว้เพื่อให้ระบบและ dashboard ทำงานถูกต้อง · กดบันทึกแล้วผู้เข้าร่วมเห็นเนื้อหาใหม่ทันที</div>`;
+  let h=`<div class="note-banner">แก้ข้อความให้เข้ากับงาน Event ได้ทุกช่อง · โครงสร้าง 5 Level × 4 ขั้น framework ถูกล็อกไว้เพื่อให้ระบบและ dashboard ทำงานถูกต้อง · กดบันทึกแล้วผู้เข้าร่วมเห็นเนื้อหาใหม่ทันที</div>`;
 
   // หัวเรื่อง / hero
   h+=`<div class="card"><h2>หัวเรื่อง & หน้าแรก</h2><div class="sub">ข้อความด้านบนสุดของเว็บ และแบนเนอร์หน้าเริ่มต้น</div>
@@ -695,7 +695,7 @@ function adminContent(){
   </div>`;
 
   // framework steps (4 ขั้น)
-  h+=`<div class="card"><h2>4 ขั้นของ Framework (ใช้ทุกด่าน)</h2><div class="sub">หัวข้อ / คำอธิบาย / ไอคอน · แนะนำไอคอน 256×256px PNG พื้นโปร่งใส</div>`;
+  h+=`<div class="card"><h2>4 ขั้นของ Framework (ใช้ทุก Level)</h2><div class="sub">หัวข้อ / คำอธิบาย / ไอคอน · แนะนำไอคอน 256×256px PNG พื้นโปร่งใส</div>`;
   CONTENT.steps.forEach((s,i)=>{
     h+=`<div class="editor-level"><div class="eh"><div class="step-icon" id="iconPrev_${i}">${s.iconImg?`<img src="${s.iconImg}" alt="">`:iconSvg(s.icon)}</div><b>${esc(s.title)}</b></div>
       <div class="editor-field"><label>หัวข้อ</label><input type="text" id="st_title_${i}" value="${esc(s.title)}"></div>
@@ -708,10 +708,10 @@ function adminContent(){
   h+=`</div>`;
 
   // levels (5)
-  h+=`<div class="card"><h2>เนื้อหา 5 ด่าน (Business Crisis)</h2><div class="sub">ชื่อด่าน / พาดหัววิกฤต / รายละเอียด / Quote</div>`;
+  h+=`<div class="card"><h2>เนื้อหา 5 Level (Business Crisis)</h2><div class="sub">ชื่อ Level / พาดหัววิกฤต / รายละเอียด / Quote</div>`;
   CONTENT.levels.forEach((L,i)=>{
     h+=`<div class="editor-level"><div class="eh"><div class="level-badge ${LV_CLS[i]}">${i+1}</div><b>Level ${i+1}</b></div>
-      <div class="editor-field"><label>ชื่อด่าน</label><input type="text" id="lv_name_${i}" value="${esc(L.name)}"></div>
+      <div class="editor-field"><label>ชื่อ Level</label><input type="text" id="lv_name_${i}" value="${esc(L.name)}"></div>
       <div class="editor-field"><label>พาดหัววิกฤต (Headline)</label><textarea id="lv_crisis_${i}">${esc(L.crisis)}</textarea></div>
       <div class="editor-field"><label>รายละเอียดสถานการณ์</label><textarea id="lv_body_${i}">${esc(L.body)}</textarea></div>
       <div class="editor-field"><label>Quote</label><textarea id="lv_quote_${i}">${esc(L.quote)}</textarea></div>
@@ -798,7 +798,7 @@ function adminReport(){
       <button class="primary-btn" onclick="downloadCSV()">⬇️ ดาวน์โหลด CSV (แตกทุกข้อ)</button>
     </div>
     <button class="ghost-btn" style="width:100%;margin-top:10px" onclick="downloadJSON()">⬇️ ดาวน์โหลด JSON (ข้อมูลดิบ)</button>
-    <div class="sub" style="margin-top:14px">CSV เปิดใน Excel/Google Sheets ได้ทันที แต่ละด่าน × 4 ข้อ จะถูกแตกเป็นคอลัมน์แยก พร้อม Final Suggestion ของพี่เลี้ยง</div>
+    <div class="sub" style="margin-top:14px">CSV เปิดใน Excel/Google Sheets ได้ทันที แต่ละ Level × 4 ข้อ จะถูกแตกเป็นคอลัมน์แยก พร้อม Final Suggestion ของพี่เลี้ยง</div>
   </div>
   <div class="card" style="border-color:#e0a99f;background:#fdf4f2">
     <h2 style="color:#a3392a">⚠ ล้างข้อมูลทั้งหมด</h2>
