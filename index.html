@@ -423,7 +423,7 @@ function renderSubmitted(){
     <h1>ส่งคำตอบครบทั้ง 5 Level แล้วครับ 🎉</h1>
     <p>กลุ่ม ${esc(session.group_no)}, ${esc(session.org_name)}, ทางทีมผู้เชี่ยวชาญจาก Predictive จะทำการเพิ่มข้อแนะนำ (Final Suggestions) อีกครั้งใน Final Report </p></div>
     <div class="card"><h2>เรียบร้อย</h2>
-      <div class="sub">คำตอบของกลุ่มที่ ${esc(session.group_no)} บริษัท ${esc(session.org_name)} ถูกบันทึกเรียบร้อยแล้วครับ${LIVE?' พี่เลี้ยงเห็นทันทีแบบเรียลไทม์':''}</div>
+      <div class="sub">คำตอบของกลุ่มที่ ${esc(session.group_no)} บริษัท ${esc(session.org_name)} ถูกบันทึกเรียบร้อยแล้วครับ${LIVE?' ทางทีมผู้เชี่ยวชาญจาก Predictive ได้รับคำตอบเรียบร้อย':''}</div>
       <button class="ghost-btn" style="width:100%" onclick="resetGame()">เริ่มกลุ่มใหม่ในเครื่องนี้</button></div>`;
 }
 function renderDone(){
