@@ -12,13 +12,18 @@
   body{background:var(--bg);color:var(--ink);line-height:1.5}
   .wrap{max-width:1180px;margin:0 auto;padding:18px 16px 100px}
   .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
-  .brand{display:flex;flex-direction:column}
-  .brand-logo{height:24px;width:auto;max-width:150px;margin-bottom:10px;display:none}
+  .brand{display:flex;flex-direction:column;gap:4px}
+  .brand-logo{height:30px;width:auto;max-width:170px;object-fit:contain;display:none}
   .brand-logo.show{display:block}
+  .brand .kicker{display:none}
+  .brand .title{font-size:17px;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
   .hero-logo{height:30px;width:auto;margin-bottom:16px;filter:brightness(0) invert(1);opacity:.92;display:none}
   .hero-logo.show{display:block}
-  .brand .kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:800}
-  .brand .title{font-size:18px;font-weight:800;letter-spacing:-.01em}
+  .hero-logos{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+  .hero-logos .hero-logo{margin-bottom:0}
+  .hero-logo-sep{width:1px;height:26px;background:rgba(255,255,255,.3)}
+  .hero-logo-vwo{height:26px;width:auto;object-fit:contain;opacity:.95;display:none}
+  .hero-logo-vwo.show{display:block}
   .topbar-right{display:flex;gap:8px;align-items:center}
   .ghost-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:7px 13px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer}
   .ghost-btn:active{background:var(--line)}
@@ -60,6 +65,8 @@
   .level-head .lv-sub{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
   .scenario{background:var(--navy-soft);border:1px solid #cdd7ee;border-radius:14px;padding:18px;margin-bottom:20px}
   .scenario .crisis-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .crisis-img{display:block;width:100%;height:auto;object-fit:contain;border-radius:12px;margin-top:14px}
+  .crisis-img-top{margin-top:12px;margin-bottom:16px}
   .scenario .headline{font-size:17px;font-weight:800;margin-bottom:10px;line-height:1.3}
   .scenario p{font-size:14px;color:#3c4763;margin-bottom:8px}
   .scenario .quote{font-style:italic;color:#54607e;border-left:3px solid var(--accent);padding-left:12px;margin:10px 0}
@@ -254,7 +261,7 @@ function mergeContent(v){
   const c=JSON.parse(JSON.stringify(DEFAULT_CONTENT));
   if(v.hero){ Object.keys(c.hero).forEach(k=>{ if(v.hero[k]!=null&&v.hero[k]!=="") c.hero[k]=v.hero[k]; }); }
   if(v.steps&&Array.isArray(v.steps)) v.steps.forEach((x,i)=>{ if(c.steps[i]){c.steps[i].title=x.title||c.steps[i].title;c.steps[i].focus=x.focus||c.steps[i].focus;c.steps[i].principle=x.principle||c.steps[i].principle;if(x.iconImg!=null)c.steps[i].iconImg=x.iconImg;} });
-  if(v.levels&&Array.isArray(v.levels)) v.levels.forEach((x,i)=>{ if(c.levels[i]){c.levels[i].name=x.name||c.levels[i].name;c.levels[i].crisis=x.crisis||c.levels[i].crisis;c.levels[i].body=x.body||c.levels[i].body;c.levels[i].quote=x.quote||c.levels[i].quote;} });
+  if(v.levels&&Array.isArray(v.levels)) v.levels.forEach((x,i)=>{ if(c.levels[i]){c.levels[i].name=x.name||c.levels[i].name;c.levels[i].crisis=x.crisis||c.levels[i].crisis;c.levels[i].body=x.body||c.levels[i].body;c.levels[i].quote=x.quote||c.levels[i].quote;if(x.crisisImg!=null)c.levels[i].crisisImg=x.crisisImg;} });
   return c;
 }
 async function saveContent(){
@@ -339,7 +346,7 @@ function exitRole(){ teardownRealtime(); role=null; session=null; render(); }
 // ============================================================
 function renderStart(){
   app.innerHTML=`
-    <div class="hero"><img class="hero-logo show" alt="Predictive" src="${LOGO_SRC}"><div class="eyebrow">${esc(CONTENT.hero.heroEyebrow)}</div>
+    <div class="hero"><div class="hero-logos"><img class="hero-logo show" alt="Predictive" src="${LOGO_SRC}"><span class="hero-logo-sep"></span><img class="hero-logo-vwo show" alt="VWO ABTasty" src="${VWOABT_SRC}"></div><div class="eyebrow">${esc(CONTENT.hero.heroEyebrow)}</div>
       <h1>${esc(CONTENT.hero.heroTitle)}</h1>
       <p>${esc(CONTENT.hero.heroSubtitle)}</p></div>
     <div class="card"><h2>เริ่มต้น</h2><div class="sub">กรอกข้อมูลทีมก่อนเข้าสู่ด่านแรก</div>
@@ -375,8 +382,7 @@ function renderLevel(){
     steps+=`<div class="step ${val.trim()?'filled':''}">
       <div class="step-head"><div class="step-icon">${s.iconImg?`<img src="${s.iconImg}" alt="">`:iconSvg(s.icon)}</div><div class="step-num">${s.num}</div><div class="step-title">${esc(s.title)}</div></div>
       <div class="step-focus">${esc(s.focus)}</div>
-      <textarea placeholder="พิมพ์คำตอบของทีม…" oninput="onAns('${s.id}',this.value)">${esc(val)}</textarea>
-      <div class="principle"><b>Consulting Principle</b>${esc(s.principle)}</div></div>`;
+      <textarea placeholder="พิมพ์คำตอบของทีม…" oninput="onAns('${s.id}',this.value)">${esc(val)}</textarea></div>`;
   });
   steps+=`</div>`;
   const isLast=viewLevel===5, canNext=levelComplete(viewLevel);
@@ -384,6 +390,7 @@ function renderLevel(){
     <div class="level-head"><div class="level-badge ${LV_CLS[viewLevel-1]}">${viewLevel}</div>
       <div><div class="lv-sub">Level ${viewLevel} / 5</div><h1>${esc(L.name)}</h1></div></div>
     <div class="scenario"><div class="crisis-label">⚠ Business Crisis</div>
+      ${L.crisisImg?`<img class="crisis-img crisis-img-top" src="${L.crisisImg}" alt="">`:''}
       <div class="headline">"${esc(L.crisis)}"</div><p>${esc(L.body)}</p><div class="quote">${esc(L.quote)}</div></div>
     ${steps}
     <div class="nav-row">
@@ -553,7 +560,11 @@ function buildReportHTML(g){
     <!-- header -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
       <div style="font-size:13px;color:#9fc0e8;line-height:1.35">From Guesswork to Growth:<br>Building an Experimentation-Driven Organization</div>
-      <img src="${VWOABT_SRC}" style="height:30px;object-fit:contain">
+      <div style="display:flex;align-items:center;gap:14px">
+        <img src="${LOGO_SRC}" style="height:26px;object-fit:contain;filter:brightness(0) invert(1)">
+        <span style="width:1px;height:24px;background:rgba(255,255,255,.3)"></span>
+        <img src="${VWOABT_SRC}" style="height:28px;object-fit:contain">
+      </div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
       <div style="font-size:28px;font-weight:800;letter-spacing:-.01em">Conversion Crisis Lab - Report</div>
@@ -684,12 +695,11 @@ function adminContent(){
   </div>`;
 
   // framework steps (4 ขั้น)
-  h+=`<div class="card"><h2>4 ขั้นของ Framework (ใช้ทุกด่าน)</h2><div class="sub">หัวข้อ / คำอธิบาย / Consulting Principle / ไอคอน · แนะนำไอคอน 256×256px PNG พื้นโปร่งใส</div>`;
+  h+=`<div class="card"><h2>4 ขั้นของ Framework (ใช้ทุกด่าน)</h2><div class="sub">หัวข้อ / คำอธิบาย / ไอคอน · แนะนำไอคอน 256×256px PNG พื้นโปร่งใส</div>`;
   CONTENT.steps.forEach((s,i)=>{
     h+=`<div class="editor-level"><div class="eh"><div class="step-icon" id="iconPrev_${i}">${s.iconImg?`<img src="${s.iconImg}" alt="">`:iconSvg(s.icon)}</div><b>${esc(s.title)}</b></div>
       <div class="editor-field"><label>หัวข้อ</label><input type="text" id="st_title_${i}" value="${esc(s.title)}"></div>
       <div class="editor-field"><label>คำอธิบาย (Focus)</label><textarea id="st_focus_${i}">${esc(s.focus)}</textarea></div>
-      <div class="editor-field"><label>Consulting Principle</label><textarea id="st_pr_${i}">${esc(s.principle)}</textarea></div>
       <div class="editor-field"><label>ไอคอน (อัปโหลดเอง — ไม่อัป = ใช้ไอคอนเริ่มต้น)</label>
         <input type="file" accept="image/*" onchange="uploadStepIcon(event,${i})">
         ${s.iconImg?`<button class="ghost-btn" style="margin-top:8px" onclick="clearStepIcon(${i})">ลบไอคอนที่อัป (กลับไปใช้ค่าเริ่มต้น)</button>`:''}
@@ -704,7 +714,11 @@ function adminContent(){
       <div class="editor-field"><label>ชื่อด่าน</label><input type="text" id="lv_name_${i}" value="${esc(L.name)}"></div>
       <div class="editor-field"><label>พาดหัววิกฤต (Headline)</label><textarea id="lv_crisis_${i}">${esc(L.crisis)}</textarea></div>
       <div class="editor-field"><label>รายละเอียดสถานการณ์</label><textarea id="lv_body_${i}">${esc(L.body)}</textarea></div>
-      <div class="editor-field"><label>Quote</label><textarea id="lv_quote_${i}">${esc(L.quote)}</textarea></div></div>`;
+      <div class="editor-field"><label>Quote</label><textarea id="lv_quote_${i}">${esc(L.quote)}</textarea></div>
+      <div class="editor-field"><label>รูปภาพประกอบ (อัปโหลดเอง — ไม่บังคับ)</label>
+        <input type="file" accept="image/*" onchange="uploadCrisisImg(event,${i})">
+        <div id="crisisPrev_${i}" style="margin-top:8px">${L.crisisImg?`<img src="${L.crisisImg}" style="max-height:120px;border-radius:8px"><br><button class="ghost-btn" style="margin-top:8px" onclick="clearCrisisImg(${i})">ลบรูป</button>`:''}</div>
+      </div></div>`;
   });
   h+=`</div>`;
 
@@ -719,7 +733,7 @@ async function saveContentEdits(){
   CONTENT.hero.heroEyebrow=val("hero_heroEyebrow",CONTENT.hero.heroEyebrow);
   CONTENT.hero.heroTitle=val("hero_heroTitle",CONTENT.hero.heroTitle);
   CONTENT.hero.heroSubtitle=val("hero_heroSubtitle",CONTENT.hero.heroSubtitle);
-  CONTENT.steps.forEach((s,i)=>{ s.title=val("st_title_"+i,s.title); s.focus=val("st_focus_"+i,s.focus); s.principle=val("st_pr_"+i,s.principle); });
+  CONTENT.steps.forEach((s,i)=>{ s.title=val("st_title_"+i,s.title); s.focus=val("st_focus_"+i,s.focus); });
   CONTENT.levels.forEach((L,i)=>{ L.name=val("lv_name_"+i,L.name); L.crisis=val("lv_crisis_"+i,L.crisis); L.body=val("lv_body_"+i,L.body); L.quote=val("lv_quote_"+i,L.quote); });
   const ok=await saveContent();
   applyBrand();
@@ -754,6 +768,16 @@ async function uploadStepIcon(ev,i){
   }catch(e){ alert("อ่านรูปไม่สำเร็จ ลองไฟล์อื่น"); }
 }
 function clearStepIcon(i){ CONTENT.steps[i].iconImg=""; renderAdmin(); }
+async function uploadCrisisImg(ev,i){
+  const file=ev.target.files&&ev.target.files[0]; if(!file) return;
+  try{
+    const dataUrl=await resizeImage(file,1000);
+    CONTENT.levels[i].crisisImg=dataUrl;
+    const prev=document.getElementById("crisisPrev_"+i);
+    if(prev) prev.innerHTML=`<img src="${dataUrl}" style="max-height:120px;border-radius:8px"><br><button class="ghost-btn" style="margin-top:8px" onclick="clearCrisisImg(${i})">ลบรูป</button>`;
+  }catch(e){ alert("อ่านรูปไม่สำเร็จ ลองไฟล์อื่น"); }
+}
+function clearCrisisImg(i){ CONTENT.levels[i].crisisImg=""; renderAdmin(); }
 
 async function resetContentDefaults(){
   if(!confirm("คืนค่าเนื้อหาทั้งหมดกลับเป็นค่าเริ่มต้น?")) return;
