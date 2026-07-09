@@ -67,11 +67,18 @@
   .scenario .crisis-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
   .crisis-img{display:block;width:100%;height:auto;object-fit:contain;border-radius:12px;margin-top:14px}
   .crisis-img-top{margin-top:12px;margin-bottom:16px}
+  .challenge-box{margin-top:16px;background:var(--navy);color:#fff;border-radius:12px;padding:14px 18px;font-size:15px;font-weight:600;line-height:1.5}
+  .challenge-label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8fb3e8;font-weight:800;margin-bottom:6px}
+  .resource-link{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;margin-top:10px;text-decoration:none;color:var(--ink);transition:border-color .15s,background .15s}
+  .resource-link:hover{border-color:var(--navy);background:#f6f8fc}
+  .resource-link .rl-ic{font-size:22px;flex:none}
+  .resource-link b{font-size:14px}
+  .resource-link small{color:var(--muted);font-size:12px}
+  .resource-link .rl-go{margin-left:auto;color:var(--muted);font-size:18px;flex:none}
   .scenario .headline{font-size:17px;font-weight:800;margin-bottom:10px;line-height:1.3}
   .scenario p{font-size:14px;color:#3c4763;margin-bottom:8px}
   .scenario .quote{font-style:italic;color:#54607e;border-left:3px solid var(--accent);padding-left:12px;margin:10px 0}
-  .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
-  @media(max-width:900px){.steps-grid{grid-template-columns:repeat(2,1fr)}}
+  .steps-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
   @media(max-width:560px){.steps-grid{grid-template-columns:1fr}}
   .step{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff;transition:border-color .15s;display:flex;flex-direction:column}
   .step.filled{border-color:var(--good)}
@@ -192,24 +199,21 @@ const DEFAULT_CONTENT = {
     eyebrowTop:"VWO × Predictive",
     systemTitle:"Strategic Optimization Blueprint",
     heroEyebrow:"Growth Intelligence & Testing Framework",
-    heroTitle:"วินิจฉัยวิกฤต เพิ่ม Conversion ใน 5 Level",
-    heroSubtitle:"สวมบทที่ปรึกษา วิเคราะห์ปัญหาเว็บไซต์ทีละ Level ตาม framework แล้วส่งให้พี่เลี้ยงรีวิว"
+    heroTitle:"Conversion Crisis Lab",
+    heroSubtitle:"สวมบทที่ปรึกษา วิเคราะห์ปัญหาเว็บไซต์ทีละ Crisis ตาม framework แล้ว Staff Review"
   },
   steps:[
-    {id:"diagnostic",num:"1",title:"Diagnostic Data",icon:"search",focus:"จุดที่พบพฤติกรรมผิดปกติจากข้อมูล",principle:"\"Look for anomalies, not just averages.\" อย่าดูแค่ค่าเฉลี่ย ให้มองหาพฤติกรรมที่ขัดแย้งกัน เช่น เวลาในหน้านาน แต่ CTR ต่ำ = สัญญาณ Friction เชิงซ้อน"},
-    {id:"hypothesis",num:"2",title:"Hypothesis",icon:"bulb",focus:"คาดการณ์สาเหตุที่ทำให้ผู้ใช้งานหยุดหรือไม่ดำเนินการต่อ",principle:"\"Address the root cause, not the symptom.\" แก้ที่ต้นเหตุ การลดสิ่งรบกวน (Distractions) อาจสร้าง Impact มากกว่าการเพิ่มปุ่ม"},
-    {id:"intervention",num:"3",title:"Intervention",icon:"wrench",focus:"สิ่งที่จะปรับปรุงหรือทดลองเพื่อแก้ปัญหา",principle:"\"Variable Isolation is key.\" ทดสอบและปรับเปลี่ยนตัวแปรหลักเพียง 1-2 อย่างต่อแคมเปญ เพื่อรู้ชัดว่าปัจจัยใดคือสิ่งที่เพิ่มยอดขาย"},
-    {id:"measurement",num:"4",title:"Measurement",icon:"chart",focus:"ตัวชี้วัดสำหรับวัดผลลัพธ์หลังการปรับปรุง",principle:"\"Track macro-conversions over micro-conversions.\" ยอดคลิกที่เพิ่มขึ้น (Micro) ไม่มีความหมายหากยอดขาย (Macro) ไม่เพิ่ม"}
+    {id:"hypothesis",num:"1",title:"Hypothesis (สมมติฐาน)",icon:"bulb",focus:"ตั้งสมมติฐานว่าอะไรคือสาเหตุ และการปรับแบบไหนจะช่วยแก้ปัญหาได้"},
+    {id:"todo",num:"2",title:"To Do & Measurement (วิธีทำและการวัดผล)",icon:"wrench",focus:"สิ่งที่จะลงมือทำ/ทดลอง และตัวชี้วัดที่ใช้วัดผลลัพธ์"}
   ],
   levels:[
-    {n:1,name:"Awareness & Engagement",cls:"lv1",crisis:"เราทุ่มงบ Marketing ไปเยอะมาก แต่คนเข้าหน้าแรกแล้วหายไปเลย",body:"บริษัทอัดงบโฆษณาไป 3 แสนบาทเพื่อดึงคนเข้าหน้า Homepage — Traffic พุ่งขึ้น +40% แต่ยอด Unique Conversions กลับเพิ่มแค่ +3%",quote:"\"เราซื้อ Traffic มาทำไมตั้งเยอะ ในเมื่อคนเข้ามาดูรูปกระเป๋าสีพาสเทลแล้วก็ปิดเว็บหนี? เรากำลังเผาเงินทิ้งชัด ๆ!\" — CFO โวยในที่ประชุม"},
-    {n:2,name:"Consideration & Interest",cls:"lv2",crisis:"คนดูสินค้านานแต่ไม่กดหยิบใส่ตะกร้า",body:"หน้ารายละเอียดสินค้า (PDP) มี Scroll Depth สูง ผู้ใช้อ่านนานเฉลี่ย 2 นาที แต่อัตรา Add-to-Cart ต่ำผิดปกติเมื่อเทียบกับค่ามาตรฐานอุตสาหกรรม",quote:"\"ลูกค้าสนใจจริง อ่านรีวิวหมดทุกอัน แต่ทำไมไม่ยอมกดซื้อ? มันติดอะไรอยู่กันแน่?\" — Product Lead"},
-    {n:3,name:"Conversion & Checkout",cls:"lv3",crisis:"ตะกร้าเต็มแต่ทิ้งกลางคันตอนจ่ายเงิน",body:"Cart Abandonment Rate สูงถึงระดับวิกฤต ผู้ใช้กรอกข้อมูลถึงหน้าชำระเงินแล้วออกจากระบบ โดยเฉพาะบนมือถือ",quote:"\"เราเสียลูกค้าที่ตั้งใจจะซื้ออยู่แล้วในวินาทีสุดท้าย นี่มันเจ็บปวดที่สุด\" — Head of E-commerce"},
-    {n:4,name:"Retention & Loyalty",cls:"lv4",crisis:"ซื้อครั้งเดียวแล้วไม่กลับมาอีก",body:"Repeat Purchase Rate ต่ำ ลูกค้าใหม่เข้ามาเรื่อย ๆ แต่ Lifetime Value ไม่โต อีเมลติดตามหลังการขายมี Open Rate ต่ำ",quote:"\"เราจ่ายค่าหาลูกค้าใหม่แพงขึ้นทุกเดือน แต่ของเก่าหายหมด เหมือนตักน้ำใส่ตะกร้ารั่ว\" — CMO"},
-    {n:5,name:"Advocacy & Growth",cls:"lv5",crisis:"ลูกค้าพอใจแต่ไม่บอกต่อ",body:"คะแนนความพึงพอใจ (CSAT) สูง แต่ Referral / Net Promoter Score ต่ำ โปรแกรมแนะนำเพื่อนแทบไม่มีคนใช้ การเติบโตแบบ Organic หยุดนิ่ง",quote:"\"ลูกค้าชอบเรานะ แต่ไม่มีใครช่วยป่าวประกาศให้ เราโตเองคนเดียวไม่ไหวแล้ว\" — Founder"}
+    {n:1,name:"Crisis 1 · Awareness & Engagement",cls:"lv1",crisis:"Traffic ลูกค้าผู้หญิงพุ่งสูง แต่ออกจากเว็บตั้งแต่ Hero Banner",body:"จากการยิงแอดแคมเปญล่าสุด มี Traffic ลูกค้าผู้หญิงเข้ามาที่หน้า Homepage พุ่งสูงมาก แต่ลูกค้าที่เข้ามาส่วนใหญ่ Scroll ถึงแค่ Hero Banner แล้วกดออกจากเว็บไป โดยข้อมูลจาก GA4 ระบุว่า journey ลูกค้ากลุ่มนี้มีความสนใจ Beauty มากกว่า",quote:"",challenge:"ควรจะปรับหน้าเว็บสำหรับลูกค้ากลุ่มนี้โดยเฉพาะอย่างไร"},
+    {n:2,name:"Crisis 2 · Consideration & Interest",cls:"lv2",crisis:"เมนู \"Men Watches\" มี CTR ต่ำสุด ทั้งที่กำไรสูงสุด",body:"แถบเมนูด้านบน (Top Navigation Bar) ของเว็บไซต์มีหมวดหมู่สินค้าทั้งหมด แต่เมื่อดูข้อมูลพบว่าเมนู \"Men Watches\" มียอดคลิก (CTR) ต่ำที่สุดเมื่อเทียบกับหมวดอื่น ๆ ทำให้ยอดขายในหมวดหมู่นี้ไม่ถึงเป้า KPI ทั้ง ๆ ที่ข้อมูลจาก GA4 ระบุว่าเป็นกลุ่มสินค้าที่สร้างกำไรมากที่สุด",quote:"",challenge:"ควรทำอย่างไรให้หมวดหมู่นี้ดูน่าสนใจ และพรีเมี่ยมมากขึ้น เพื่อดึงความสนใจของลูกค้า"},
+    {n:3,name:"Crisis 3 · Conversion & Checkout",cls:"lv3",crisis:"ลูกค้าดู \"Trending Products\" เยอะ แต่ไม่กด Add to Cart",body:"จากการดู Heatmap พบว่าลูกค้าเลื่อนหน้าจอ (Scroll) ลงมาดูสินค้าในโซน \"Trending Products\" เยอะมาก แต่ลูกค้าส่วนใหญ่ไม่กด Add to Cart",quote:"",challenge:"เราจะแก้ไขปัญหานี้ได้อย่างไรบ้าง?"}
   ]
 };
 const LV_CLS=["lv1","lv2","lv3","lv4","lv5"];
+function NLV(){ return CONTENT.levels.length; }
 // ไอคอน SVG ประจำแต่ละขั้น (stroke ใช้สี currentColor)
 const ICONS={
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
@@ -237,7 +241,7 @@ let adminTab="dashboard"; // dashboard | groups | content
 const app=document.getElementById("app");
 
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function blankAnswers(){ const lv={}; CONTENT.levels.forEach(l=>lv[l.n]={diagnostic:"",hypothesis:"",intervention:"",measurement:""}); return lv; }
+function blankAnswers(){ const lv={}; CONTENT.levels.forEach(l=>{ lv[l.n]={}; CONTENT.steps.forEach(s=>lv[l.n][s.id]=""); }); return lv; }
 
 // ============================================================
 //  DATA LAYER — ทำงาน 2 โหมด: local (sessionStorage) / live (Supabase)
@@ -261,7 +265,7 @@ function mergeContent(v){
   const c=JSON.parse(JSON.stringify(DEFAULT_CONTENT));
   if(v.hero){ Object.keys(c.hero).forEach(k=>{ if(v.hero[k]!=null&&v.hero[k]!=="") c.hero[k]=v.hero[k]; }); }
   if(v.steps&&Array.isArray(v.steps)) v.steps.forEach((x,i)=>{ if(c.steps[i]){c.steps[i].title=x.title||c.steps[i].title;c.steps[i].focus=x.focus||c.steps[i].focus;c.steps[i].principle=x.principle||c.steps[i].principle;if(x.iconImg!=null)c.steps[i].iconImg=x.iconImg;} });
-  if(v.levels&&Array.isArray(v.levels)) v.levels.forEach((x,i)=>{ if(c.levels[i]){c.levels[i].name=x.name||c.levels[i].name;c.levels[i].crisis=x.crisis||c.levels[i].crisis;c.levels[i].body=x.body||c.levels[i].body;c.levels[i].quote=x.quote||c.levels[i].quote;if(x.crisisImg!=null)c.levels[i].crisisImg=x.crisisImg;} });
+  if(v.levels&&Array.isArray(v.levels)) v.levels.forEach((x,i)=>{ if(c.levels[i]){c.levels[i].name=x.name||c.levels[i].name;c.levels[i].crisis=x.crisis||c.levels[i].crisis;c.levels[i].body=x.body||c.levels[i].body;if(x.quote!=null)c.levels[i].quote=x.quote;if(x.challenge!=null)c.levels[i].challenge=x.challenge;if(x.crisisImg!=null)c.levels[i].crisisImg=x.crisisImg;} });
   return c;
 }
 async function saveContent(){
@@ -349,11 +353,16 @@ function renderStart(){
     <div class="hero"><div class="hero-logos"><img class="hero-logo show" alt="Predictive" src="${LOGO_SRC}"><span class="hero-logo-sep"></span><img class="hero-logo-vwo show" alt="VWO ABTasty" src="${VWOABT_SRC}"></div><div class="eyebrow">${esc(CONTENT.hero.heroEyebrow)}</div>
       <h1>${esc(CONTENT.hero.heroTitle)}</h1>
       <p>${esc(CONTENT.hero.heroSubtitle)}</p></div>
-    <div class="card"><h2>เริ่มต้น</h2><div class="sub">กรอกข้อมูลทีมก่อนเข้าสู่ Level แรก</div>
+    <div class="card"><h2>เริ่มต้น</h2><div class="sub">กรอกข้อมูลทีมก่อนเข้าสู่ Crisis แรก</div>
       <div class="field"><label>ชื่อองค์กร / บริษัท</label><input type="text" id="org" placeholder="เช่น บริษัท ABC จำกัด"></div>
       <div class="field"><label>หมายเลขกลุ่ม</label><input type="text" id="grp" placeholder="เช่น 1, 2, 3…"></div>
       <div class="err hidden" id="startErr"></div>
       <button class="primary-btn" id="startBtn" onclick="startGame()">เริ่มภารกิจ →</button>
+    </div>
+    <div class="card"><h2>ลิงก์ที่ต้องใช้ในกิจกรรม</h2><div class="sub">เปิดลิงก์เหล่านี้ไว้ประกอบการทำภารกิจ</div>
+      <a class="resource-link" href="https://app.wingify.com/#/dashboard?accountId=1240155" target="_blank" rel="noopener"><span class="rl-ic">📊</span><span><b>Platform Dashboard</b><br><small>VWO Dashboard สำหรับดูข้อมูลและสร้างแคมเปญ</small></span><span class="rl-go">↗</span></a>
+      <a class="resource-link" href="https://playground.tryvwo.com/" target="_blank" rel="noopener"><span class="rl-ic">🛒</span><span><b>E-commerce Demo Site</b><br><small>เว็บไซต์จำลอง Pocket Shopper สำหรับทดสอบ</small></span><span class="rl-go">↗</span></a>
+      <a class="resource-link" href="https://drive.google.com/drive/folders/1pLC_4n4Z86DUQpK41KRwu6QRlDLc8pX9?usp=sharing" target="_blank" rel="noopener"><span class="rl-ic">🎨</span><span><b>Assets for create campaign</b><br><small>ไฟล์ภาพ/สื่อสำหรับสร้างแคมเปญ (Google Drive)</small></span><span class="rl-go">↗</span></a>
     </div>`;
 }
 async function startGame(){
@@ -371,33 +380,33 @@ async function startGame(){
 }
 
 // ===== participant — level =====
-function levelComplete(n){ const d=session.answers[n]; return d&&d.diagnostic.trim()&&d.hypothesis.trim()&&d.intervention.trim()&&d.measurement.trim(); }
+function levelComplete(n){ const d=session.answers[n]; if(!d) return false; return CONTENT.steps.every(s=>d[s.id]&&d[s.id].trim()); }
 function renderLevel(){
   const L=CONTENT.levels[viewLevel-1]; const d=session.answers[viewLevel];
   let rail=`<div class="rail">`;
-  for(let i=1;i<=5;i++){ const c=(levelComplete(i)?'done':'')+(i===viewLevel?' active':''); rail+=`<div class="seg ${c.trim()}"></div>`; }
+  for(let i=1;i<=NLV();i++){ const c=(levelComplete(i)?'done':'')+(i===viewLevel?' active':''); rail+=`<div class="seg ${c.trim()}"></div>`; }
   rail+=`</div>`;
   let steps=`<div class="steps-grid">`;
-  CONTENT.steps.forEach(s=>{ const val=d[s.id];
+  CONTENT.steps.forEach(s=>{ const val=d[s.id]||"";
     steps+=`<div class="step ${val.trim()?'filled':''}">
       <div class="step-head"><div class="step-icon">${s.iconImg?`<img src="${s.iconImg}" alt="">`:iconSvg(s.icon)}</div><div class="step-num">${s.num}</div><div class="step-title">${esc(s.title)}</div></div>
       <div class="step-focus">${esc(s.focus)}</div>
       <textarea placeholder="พิมพ์คำตอบของทีม…" oninput="onAns('${s.id}',this.value)">${esc(val)}</textarea></div>`;
   });
   steps+=`</div>`;
-  const isLast=viewLevel===5, canNext=levelComplete(viewLevel);
+  const isLast=viewLevel===NLV(), canNext=levelComplete(viewLevel);
   app.innerHTML=`${rail}
     <div class="level-head"><div class="level-badge ${LV_CLS[viewLevel-1]}">${viewLevel}</div>
-      <div><div class="lv-sub">Level ${viewLevel} / 5</div><h1>${esc(L.name)}</h1></div></div>
+      <div><div class="lv-sub">Crisis ${viewLevel} / ${NLV()}</div><h1>${esc(L.name)}</h1></div></div>
     <div class="scenario"><div class="crisis-label">⚠ Business Crisis</div>
       ${L.crisisImg?`<img class="crisis-img crisis-img-top" src="${L.crisisImg}" alt="">`:''}
-      <div class="headline">"${esc(L.crisis)}"</div><p>${esc(L.body)}</p><div class="quote">${esc(L.quote)}</div></div>
+      <div class="headline">"${esc(L.crisis)}"</div><p>${esc(L.body)}</p>${L.quote?`<div class="quote">${esc(L.quote)}</div>`:''}${L.challenge?`<div class="challenge-box"><span class="challenge-label">🎯 Challenge</span>${esc(L.challenge)}</div>`:''}</div>
     ${steps}
     <div class="nav-row">
-      ${viewLevel>1?`<button class="ghost-btn" onclick="prevLevel()">← Level ก่อน</button>`:''}
+      ${viewLevel>1?`<button class="ghost-btn" onclick="prevLevel()">← Crisis ก่อน</button>`:''}
       ${isLast?`<button class="primary-btn accent-btn" ${canNext?'':'disabled'} onclick="finalSubmit()">ส่งคำตอบทั้งหมด (Submit) ✓</button>`
-              :`<button class="primary-btn" ${canNext?'':'disabled'} onclick="nextLevel()">Level ถัดไป →</button>`}</div>
-    <div class="saved-pill" id="saveStatus">${canNext?'✓ Level นี้ครบแล้ว':'กรอกให้ครบ 4 ช่องเพื่อไปต่อ'}</div>`;
+              :`<button class="primary-btn" ${canNext?'':'disabled'} onclick="nextLevel()">Crisis ถัดไป →</button>`}</div>
+    <div class="saved-pill" id="saveStatus">${canNext?'✓ Crisis นี้ครบแล้ว':'กรอกให้ครบทุกช่องเพื่อไปต่อ'}</div>`;
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function onAns(stepId,v){
@@ -414,22 +423,22 @@ function scheduleSave(){
   },650);
 }
 function currentRow(){ return {group_no:session.group_no,org_name:session.org_name,answers:session.answers,submitted:session.submitted,final_suggestion:session.final_suggestion,final_done:session.final_done}; }
-function nextLevel(){ if(viewLevel<5){viewLevel++;render();} }
+function nextLevel(){ if(viewLevel<NLV()){viewLevel++;render();} }
 function prevLevel(){ if(viewLevel>1){viewLevel--;render();} }
 async function finalSubmit(){ session.submitted=true; try{await dbUpsert(currentRow())}catch(e){} render(); }
 
 function renderSubmitted(){
   app.innerHTML=`<div class="hero"><div class="eyebrow">Submission Complete</div>
-    <h1>ส่งคำตอบครบทั้ง 5 Level แล้วครับ 🎉</h1>
-    <p>กลุ่ม ${esc(session.group_no)}, ${esc(session.org_name)}, ทางทีมผู้เชี่ยวชาญจาก Predictive จะทำการเพิ่มข้อแนะนำ (Final Suggestions) อีกครั้งใน Final Report </p></div>
+    <h1>ส่งคำตอบครบทั้ง 3 Crisis แล้วครับ 🎉</h1>
+    <p>กลุ่ม ${esc(session.group_no)}, ${esc(session.org_name)}, ทางทีมผู้เชี่ยวชาญจาก Predictive จะทำการเพิ่มบทสรุปอีกครั้งใน Final Report ครับ</p></div>
     <div class="card"><h2>เรียบร้อย</h2>
-      <div class="sub">คำตอบของกลุ่มที่ ${esc(session.group_no)} บริษัท ${esc(session.org_name)} ถูกบันทึกเรียบร้อยแล้วครับ${LIVE?' ทางทีมผู้เชี่ยวชาญจาก Predictive ได้รับคำตอบเรียบร้อย':''}</div>
+      <div class="sub">คำตอบของกลุ่มที่ ${esc(session.group_no)} บริษัท ${esc(session.org_name)} ถูกบันทึกเรียบร้อยแล้วครับ${LIVE?' พี่เลี้ยงเห็นทันทีแบบเรียลไทม์':''}</div>
       <button class="ghost-btn" style="width:100%" onclick="resetGame()">เริ่มกลุ่มใหม่ในเครื่องนี้</button></div>`;
 }
 function renderDone(){
   app.innerHTML=`<div class="hero"><div class="eyebrow">Finalized</div>
-    <h1>เสร็จสมบูรณ์ ✓</h1><p>พี่เลี้ยงได้ส่ง Final Suggestion สำหรับกลุ่ม ${esc(session.group_no)} แล้ว</p></div>
-    <div class="card"><h2>Final Suggestion จากพี่เลี้ยง</h2>
+    <h1>เสร็จสมบูรณ์ ✓</h1><p>พี่เลี้ยงได้ส่งบทสรุปสำหรับกลุ่ม ${esc(session.group_no)} แล้ว</p></div>
+    <div class="card"><h2>สรุปจากพี่เลี้ยง</h2>
     <div class="ans-a" style="margin-top:8px">${esc(session.final_suggestion)}</div>
     <button class="ghost-btn" style="margin-top:16px;width:100%" onclick="resetGame()">เริ่มกลุ่มใหม่</button></div>`;
 }
@@ -459,17 +468,17 @@ async function loadStaffData(){
 function statsFrom(rows){
   const submitted=rows.filter(r=>r.submitted).length;
   const finalized=rows.filter(r=>r.final_done).length;
-  let levelsFilled=0; rows.forEach(r=>{ for(let i=1;i<=5;i++){ const d=r.answers&&r.answers[i]; if(d&&d.diagnostic&&d.hypothesis&&d.intervention&&d.measurement) levelsFilled++; } });
+  let levelsFilled=0; rows.forEach(r=>{ for(let i=1;i<=NLV();i++){ const d=r.answers&&r.answers[i]; if(d&&CONTENT.steps.every(st=>d[st.id]&&String(d[st.id]).trim())) levelsFilled++; } });
   return {total:rows.length,submitted,finalized,levelsFilled};
 }
 function dashTable(rows,withReview){
   let h=`<table class="dash-table"><thead><tr><th>กลุ่ม</th><th>องค์กร</th><th>ความคืบหน้า</th><th>สถานะ</th><th></th></tr></thead><tbody>`;
   rows.forEach(r=>{
-    let done=0; for(let i=1;i<=5;i++){ const d=r.answers&&r.answers[i]; if(d&&d.diagnostic&&d.hypothesis&&d.intervention&&d.measurement) done++; }
-    let mini=`<div class="mini-rail">`; for(let i=1;i<=5;i++) mini+=`<span class="${i<=done?'on':''}"></span>`; mini+=`</div>`;
-    const status=r.final_done?'<span class="pill done">รีวิวแล้ว</span>':(r.submitted?'<span class="pill prog">รอรีวิว</span>':'<span class="pill idle">กำลังทำ</span>');
-    h+=`<tr><td><b>${esc(r.group_no)}</b></td><td>${esc(r.org_name||'—')}</td><td>${mini}<span style="font-size:11px;color:var(--muted)"> ${done}/5</span></td><td>${status}</td>
-      <td>${withReview?`<button class="link-btn" onclick="openGroupDetail('${esc(r.group_no)}')">ดู/รีวิว →</button>`:''}</td></tr>`;
+    let done=0; for(let i=1;i<=NLV();i++){ const d=r.answers&&r.answers[i]; if(d&&CONTENT.steps.every(st=>d[st.id]&&String(d[st.id]).trim())) done++; }
+    let mini=`<div class="mini-rail">`; for(let i=1;i<=NLV();i++) mini+=`<span class="${i<=done?'on':''}"></span>`; mini+=`</div>`;
+    const status=r.submitted?'<span class="pill done">ส่งแล้ว</span>':'<span class="pill idle">กำลังทำ</span>';
+    h+=`<tr><td><b>${esc(r.group_no)}</b></td><td>${esc(r.org_name||'—')}</td><td>${mini}<span style="font-size:11px;color:var(--muted)"> ${done}/${NLV()}</span></td><td>${status}</td>
+      <td>${withReview?`<button class="link-btn" onclick="openGroupDetail('${esc(r.group_no)}')">ดูคำตอบ / สร้างรายงาน →</button>`:''}</td></tr>`;
   });
   h+=`</tbody></table>`; return h;
 }
@@ -477,12 +486,11 @@ function renderStaff(keep){
   const sy=keep?window.scrollY:0;
   const s=statsFrom(pdtRows);
   app.innerHTML=`
-    <div class="note-banner">โหมด Staff (พี่เลี้ยง/PDT): ดูความคืบหน้าทุกกลุ่ม รีวิว และให้ Final Suggestion ${LIVE?'· อัปเดตสดเรียลไทม์':'· (โหมดทดสอบในเครื่อง)'}</div>
+    <div class="note-banner">โหมด Staff (พี่เลี้ยง/PDT): ดูความคืบหน้าทุกกลุ่มและสร้างรายงาน ${LIVE?'· อัปเดตสดเรียลไทม์':'· (โหมดทดสอบในเครื่อง)'}</div>
     <div class="stat-row">
       <div class="stat"><div class="big">${s.total}</div><div class="lbl">กลุ่มทั้งหมด</div></div>
-      <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว</div></div>
-      <div class="stat"><div class="big">${s.finalized}</div><div class="lbl">รีวิวแล้ว</div></div>
-      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">Level ที่เสร็จรวม</div></div>
+      <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว (พร้อมออกรายงาน)</div></div>
+      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">Crisis ที่เสร็จรวม</div></div>
     </div>
     ${pdtRows.length?dashTable(pdtRows,true):'<div class="card"><div class="sub">ยังไม่มีกลุ่มเริ่มทำ</div></div>'}`;
   if(keep) window.scrollTo(0,sy);
@@ -491,17 +499,15 @@ function renderStaff(keep){
 // ดูรายละเอียด + รีวิวกลุ่มเดียว (ใช้ร่วมทั้ง staff/admin)
 function openGroupDetail(groupNo){
   const g=pdtRows.find(r=>String(r.group_no)===String(groupNo)); if(!g) return;
-  const done=g.final_done;
   let body=`<button class="ghost-btn" style="margin-bottom:14px" onclick="${role==='admin'?'renderAdmin()':'renderStaff()'}">← กลับ</button>
     <div class="grp-card"><div class="gh"><h3>กลุ่ม ${esc(g.group_no)} · ${esc(g.org_name||'')}</h3>
-      <span class="pill ${done?'done':(g.submitted?'prog':'idle')}">${done?'รีวิวแล้ว':(g.submitted?'รอรีวิว':'กำลังทำ')}</span></div>`;
+      <span class="pill ${g.submitted?'done':'idle'}">${g.submitted?'ส่งแล้ว':'กำลังทำ'}</span></div>`;
   CONTENT.levels.forEach(L=>{ const d=g.answers&&g.answers[L.n]; if(!d) return;
-    body+=`<div class="lvl-block"><h5>Level ${L.n}: ${esc(L.name)}</h5>`;
+    body+=`<div class="lvl-block"><h5>${esc(L.name)}</h5>`;
     CONTENT.steps.forEach(s=>{ body+=`<div class="ans-q">${s.num}. ${esc(s.title)}</div><div class="ans-a">${d[s.id]?esc(d[s.id]):'<span style="color:#bbb">—</span>'}</div>`; });
     body+=`</div>`;
   });
-  if(done){ body+=`<div class="final-box"><h5>Final Suggestion (ส่งแล้ว)</h5><div class="ans-a">${esc(g.final_suggestion)}</div></div>
-    <div class="card" style="margin-top:14px"><h2 style="font-size:15px">📄 สร้างรายงาน (แผ่นเดียว แนวนอน)</h2>
+  body+=`<div class="card" style="margin-top:14px"><h2 style="font-size:15px">📄 สร้างรายงาน (แผ่นเดียว แนวนอน)</h2>
       <div class="sub">ใส่โลโก้บริษัทลูกค้า (ไม่บังคับ) · แนะนำ PNG พื้นโปร่งใส แนวนอน ~600×200px</div>
       <div class="editor-field"><input type="file" accept="image/*" onchange="uploadCustLogo(event)"></div>
       <div id="custLogoPrev" style="margin-bottom:12px"></div>
@@ -510,24 +516,10 @@ function openGroupDetail(groupNo){
         <button class="primary-btn" onclick="downloadReport('${esc(g.group_no)}','pdf')">⬇️ PDF (เอกสาร)</button>
       </div>
       <div class="saved-pill hidden" id="reportStatus"></div>
-    </div>`; }
-  else{ body+=`<div class="final-box"><h5>Final Suggestion</h5>
-    <textarea id="fs_box" placeholder="สรุปคำแนะนำสุดท้ายให้กลุ่มนี้…">${esc(g.final_suggestion||'')}</textarea>
-    <button class="primary-btn accent-btn" style="margin-top:10px" onclick="finalizeGroup('${esc(g.group_no)}')">Final Submit ให้กลุ่ม ${esc(g.group_no)}</button></div>`; }
+    </div>`;
   body+=`</div>`;
   app.innerHTML=body; window.scrollTo({top:0,behavior:'smooth'});
 }
-async function finalizeGroup(groupNo){
-  const v=(document.getElementById("fs_box").value||"").trim();
-  if(!v){ alert("กรุณาใส่ Final Suggestion ก่อน"); return; }
-  const row=pdtRows.find(r=>String(r.group_no)===String(groupNo)); if(!row) return;
-  try{
-    await dbUpsert({group_no:row.group_no,org_name:row.org_name,answers:row.answers,submitted:row.submitted,final_suggestion:v,final_done:true});
-    pdtRows=await dbAll();
-    role==='admin'?renderAdmin():renderStaff();
-  }catch(e){ alert("บันทึกไม่สำเร็จ: "+(e.message||e)); }
-}
-
 // ===== สร้างรายงาน Final (แผ่นเดียว แนวนอน) =====
 let CUST_LOGO=""; // โลโก้บริษัทลูกค้า (base64) สำหรับใส่ในรายงาน
 async function uploadCustLogo(ev){
@@ -539,7 +531,7 @@ async function uploadCustLogo(ev){
   }catch(e){ alert("อ่านรูปไม่สำเร็จ ลองไฟล์อื่น"); }
 }
 function buildReportHTML(g){
-  // ===== ดีไซน์ตาม mock-up: คอลัมน์ = 5 Level, แถว = 4 ขั้น + Final Suggestion =====
+  // ===== ดีไซน์ตาม mock-up: คอลัมน์ = 5 Level, แถว = ขั้น framework + สรุป =====
   // header ของคอลัมน์ (ชื่อ level)
   let colHeads="";
   CONTENT.levels.forEach(L=>{ colHeads+=`<div class="rv-colhead"><span class="rv-colnum">${L.n}</span><span class="rv-colname">${esc(L.name)}</span></div>`; });
@@ -550,13 +542,11 @@ function buildReportHTML(g){
     CONTENT.levels.forEach(L=>{ const d=g.answers&&g.answers[L.n]; const v=d?d[s.id]:""; cells+=`<div class="rv-cell">${v?esc(v):'<span style="color:#5b6b86">—</span>'}</div>`; });
     stepRows+=`<div class="rv-row"><div class="rv-rowlabel"><span>${esc(s.title)}</span></div><div class="rv-cells">${cells}</div></div>`;
   });
-  // แถว Final Suggestion (คอลัมน์เดียวยาว)
-  const finalRow=`<div class="rv-row rv-finalrow"><div class="rv-rowlabel"><span>Final Suggestion</span></div><div class="rv-finalcell">${g.final_suggestion?esc(g.final_suggestion):'<span style="color:#5b6b86">—</span>'}</div></div>`;
   // โลโก้ลูกค้า (ถ้าไม่อัป ใช้ HubSpot จาก mock-up ไม่ได้เพราะเป็นของลูกค้า — แสดงแค่กรอบว่าง)
   const custBlock = CUST_LOGO
     ? `<img src="${CUST_LOGO}" style="max-height:46px;max-width:160px;object-fit:contain">`
     : `<span style="font-size:12px;color:#8ea3c9">โลโก้ลูกค้า</span>`;
-  return `<div id="reportCanvas" style="width:1123px;min-height:794px;background:linear-gradient(135deg,#0a2540 0%,#143a5e 55%,#1a4a72 100%);padding:30px 34px;font-family:ui-sans-serif,system-ui,sans-serif;color:#fff;box-sizing:border-box;display:flex;flex-direction:column">
+  return `<div id="reportCanvas" style="--ncol:${CONTENT.levels.length};width:1123px;min-height:794px;background:linear-gradient(135deg,#0a2540 0%,#143a5e 55%,#1a4a72 100%);padding:30px 34px;font-family:ui-sans-serif,system-ui,sans-serif;color:#fff;box-sizing:border-box;display:flex;flex-direction:column">
     <!-- header -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
       <div style="font-size:13px;color:#9fc0e8;line-height:1.35">From Guesswork to Growth:<br>Building an Experimentation-Driven Organization</div>
@@ -576,14 +566,14 @@ function buildReportHTML(g){
     <!-- column heads -->
     <div class="rv-row" style="margin-bottom:8px"><div class="rv-rowlabel" style="background:transparent;box-shadow:none;border:none"></div><div class="rv-cells">${colHeads}</div></div>
     <!-- step rows -->
-    <div style="flex:1;display:flex;flex-direction:column;gap:8px">${stepRows}${finalRow}</div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:8px">${stepRows}</div>
     <div style="margin-top:14px;text-align:right;font-size:11px;color:#9fc0e8">The Final suggestion by Predictive</div>
   </div>
   <style>
     .rv-row{display:flex;gap:8px;align-items:stretch}
     .rv-rowlabel{flex:none;width:96px;display:flex;align-items:center;justify-content:center;text-align:center;background:#16335a;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.22);padding:8px 6px}
     .rv-rowlabel span{display:block;font-size:11px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:.01em}
-    .rv-cells{flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+    .rv-cells{flex:1;display:grid;grid-template-columns:repeat(var(--ncol,5),1fr);gap:8px}
     .rv-colhead{background:rgba(255,255,255,.1);border-radius:9px;padding:10px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;min-height:54px;justify-content:center}
     .rv-colnum{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#2e9cff;color:#fff;font-size:12px;font-weight:800}
     .rv-colname{font-size:11.5px;font-weight:700;line-height:1.2;color:#fff}
@@ -652,13 +642,11 @@ function renderAdmin(keep){
 
 function adminDashboard(){
   const s=statsFrom(pdtRows);
-  const pct=s.total?Math.round((s.finalized/s.total)*100):0;
   return `<div class="note-banner">โหมด Admin: ภาพรวมทั้งงาน ${LIVE?'· เรียลไทม์':'· (โหมดทดสอบในเครื่อง)'}</div>
     <div class="stat-row">
       <div class="stat"><div class="big">${s.total}</div><div class="lbl">กลุ่มทั้งหมด</div></div>
-      <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว</div></div>
-      <div class="stat"><div class="big">${s.finalized}</div><div class="lbl">รีวิวแล้ว (${pct}%)</div></div>
-      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">Level เสร็จรวม</div></div>
+      <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว (พร้อมออกรายงาน)</div></div>
+      <div class="stat"><div class="big">${s.levelsFilled}</div><div class="lbl">Crisis เสร็จรวม</div></div>
     </div>
     ${pdtRows.length?dashTable(pdtRows,true):'<div class="card"><div class="sub">ยังไม่มีกลุ่มเริ่มทำ</div></div>'}`;
 }
@@ -666,16 +654,14 @@ function adminGroups(){
   if(!pdtRows.length) return `<div class="card"><div class="sub">ยังไม่มีคำตอบ</div></div>`;
   let h="";
   pdtRows.forEach(g=>{
-    const done=g.final_done;
     h+=`<div class="grp-card"><div class="gh"><h3>กลุ่ม ${esc(g.group_no)} · ${esc(g.org_name||'')}</h3>
-      <span class="pill ${done?'done':(g.submitted?'prog':'idle')}">${done?'รีวิวแล้ว':(g.submitted?'รอรีวิว':'กำลังทำ')}</span></div>`;
+      <span class="pill ${g.submitted?'done':'idle'}">${g.submitted?'ส่งแล้ว':'กำลังทำ'}</span></div>`;
     CONTENT.levels.forEach(L=>{ const d=g.answers&&g.answers[L.n]; if(!d) return;
-      h+=`<div class="lvl-block"><h5>Level ${L.n}: ${esc(L.name)}</h5>`;
+      h+=`<div class="lvl-block"><h5>${esc(L.name)}</h5>`;
       CONTENT.steps.forEach(s=>{ h+=`<div class="ans-q">${s.num}. ${esc(s.title)}</div><div class="ans-a">${d[s.id]?esc(d[s.id]):'<span style="color:#bbb">—</span>'}</div>`; });
       h+=`</div>`;
     });
-    if(done) h+=`<div class="final-box"><h5>Final Suggestion</h5><div class="ans-a">${esc(g.final_suggestion)}</div></div>`;
-    else h+=`<div style="margin-top:12px"><button class="ghost-btn" onclick="openGroupDetail('${esc(g.group_no)}')">เปิดรีวิว / ใส่ Final Suggestion →</button></div>`;
+    h+=`<div style="margin-top:12px"><button class="ghost-btn" onclick="openGroupDetail('${esc(g.group_no)}')">ดูคำตอบ / สร้างรายงาน →</button></div>`;
     h+=`</div>`;
   });
   return h;
@@ -683,7 +669,7 @@ function adminGroups(){
 
 // ===== Content editor =====
 function adminContent(){
-  let h=`<div class="note-banner">แก้ข้อความให้เข้ากับงาน Event ได้ทุกช่อง · โครงสร้าง 5 Level × 4 ขั้น framework ถูกล็อกไว้เพื่อให้ระบบและ dashboard ทำงานถูกต้อง · กดบันทึกแล้วผู้เข้าร่วมเห็นเนื้อหาใหม่ทันที</div>`;
+  let h=`<div class="note-banner">แก้ข้อความให้เข้ากับงาน Event ได้ทุกช่อง · โครงสร้าง 3 Crisis × 2 framework ถูกล็อกไว้เพื่อให้ระบบและ dashboard ทำงานถูกต้อง · กดบันทึกแล้วผู้เข้าร่วมเห็นเนื้อหาใหม่ทันที</div>`;
 
   // หัวเรื่อง / hero
   h+=`<div class="card"><h2>หัวเรื่อง & หน้าแรก</h2><div class="sub">ข้อความด้านบนสุดของเว็บ และแบนเนอร์หน้าเริ่มต้น</div>
@@ -695,7 +681,7 @@ function adminContent(){
   </div>`;
 
   // framework steps (4 ขั้น)
-  h+=`<div class="card"><h2>4 ขั้นของ Framework (ใช้ทุก Level)</h2><div class="sub">หัวข้อ / คำอธิบาย / ไอคอน · แนะนำไอคอน 256×256px PNG พื้นโปร่งใส</div>`;
+  h+=`<div class="card"><h2>Framework การตอบ (ใช้ทุก Crisis)</h2><div class="sub">หัวข้อ / คำอธิบาย / ไอคอน · แนะนำไอคอน 256×256px PNG พื้นโปร่งใส</div>`;
   CONTENT.steps.forEach((s,i)=>{
     h+=`<div class="editor-level"><div class="eh"><div class="step-icon" id="iconPrev_${i}">${s.iconImg?`<img src="${s.iconImg}" alt="">`:iconSvg(s.icon)}</div><b>${esc(s.title)}</b></div>
       <div class="editor-field"><label>หัวข้อ</label><input type="text" id="st_title_${i}" value="${esc(s.title)}"></div>
@@ -708,13 +694,14 @@ function adminContent(){
   h+=`</div>`;
 
   // levels (5)
-  h+=`<div class="card"><h2>เนื้อหา 5 Level (Business Crisis)</h2><div class="sub">ชื่อ Level / พาดหัววิกฤต / รายละเอียด / Quote</div>`;
+  h+=`<div class="card"><h2>เนื้อหา 3 Crisis (Business Crisis)</h2><div class="sub">ชื่อ Crisis / พาดหัววิกฤต / รายละเอียด / Challenge</div>`;
   CONTENT.levels.forEach((L,i)=>{
-    h+=`<div class="editor-level"><div class="eh"><div class="level-badge ${LV_CLS[i]}">${i+1}</div><b>Level ${i+1}</b></div>
+    h+=`<div class="editor-level"><div class="eh"><div class="level-badge ${LV_CLS[i]}">${i+1}</div><b>Crisis ${i+1}</b></div>
       <div class="editor-field"><label>ชื่อ Level</label><input type="text" id="lv_name_${i}" value="${esc(L.name)}"></div>
       <div class="editor-field"><label>พาดหัววิกฤต (Headline)</label><textarea id="lv_crisis_${i}">${esc(L.crisis)}</textarea></div>
       <div class="editor-field"><label>รายละเอียดสถานการณ์</label><textarea id="lv_body_${i}">${esc(L.body)}</textarea></div>
-      <div class="editor-field"><label>Quote</label><textarea id="lv_quote_${i}">${esc(L.quote)}</textarea></div>
+      <div class="editor-field"><label>Quote (ไม่บังคับ)</label><textarea id="lv_quote_${i}">${esc(L.quote||'')}</textarea></div>
+      <div class="editor-field"><label>Challenge (คำถามท้าย — แสดงในกล่อง Business Crisis)</label><textarea id="lv_challenge_${i}">${esc(L.challenge||'')}</textarea></div>
       <div class="editor-field"><label>รูปภาพประกอบ (อัปโหลดเอง — ไม่บังคับ)</label>
         <input type="file" accept="image/*" onchange="uploadCrisisImg(event,${i})">
         <div id="crisisPrev_${i}" style="margin-top:8px">${L.crisisImg?`<img src="${L.crisisImg}" style="max-height:120px;border-radius:8px"><br><button class="ghost-btn" style="margin-top:8px" onclick="clearCrisisImg(${i})">ลบรูป</button>`:''}</div>
@@ -734,7 +721,7 @@ async function saveContentEdits(){
   CONTENT.hero.heroTitle=val("hero_heroTitle",CONTENT.hero.heroTitle);
   CONTENT.hero.heroSubtitle=val("hero_heroSubtitle",CONTENT.hero.heroSubtitle);
   CONTENT.steps.forEach((s,i)=>{ s.title=val("st_title_"+i,s.title); s.focus=val("st_focus_"+i,s.focus); });
-  CONTENT.levels.forEach((L,i)=>{ L.name=val("lv_name_"+i,L.name); L.crisis=val("lv_crisis_"+i,L.crisis); L.body=val("lv_body_"+i,L.body); L.quote=val("lv_quote_"+i,L.quote); });
+  CONTENT.levels.forEach((L,i)=>{ L.name=val("lv_name_"+i,L.name); L.crisis=val("lv_crisis_"+i,L.crisis); L.body=val("lv_body_"+i,L.body); L.quote=val("lv_quote_"+i,L.quote); L.challenge=val("lv_challenge_"+i,L.challenge||''); });
   const ok=await saveContent();
   applyBrand();
   const m=document.getElementById("contentSaved"); if(m){ m.textContent=ok?"✓ บันทึกแล้ว ผู้เข้าร่วมจะเห็นเนื้อหาใหม่":"⚠ บันทึกไม่สำเร็จ"; m.classList.remove("hidden"); }
@@ -789,16 +776,15 @@ function adminReport(){
   const s=statsFrom(pdtRows);
   return `<div class="card"><h2>Report สรุปผล</h2>
     <div class="sub">ดึงคำตอบทุกกลุ่มออกเป็นไฟล์ เพื่อทำ Survey / สรุปต่อยอด</div>
-    <div class="stat-row" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat-row" style="grid-template-columns:repeat(2,1fr)">
       <div class="stat"><div class="big">${s.total}</div><div class="lbl">กลุ่ม</div></div>
       <div class="stat"><div class="big">${s.submitted}</div><div class="lbl">ส่งแล้ว</div></div>
-      <div class="stat"><div class="big">${s.finalized}</div><div class="lbl">รีวิวแล้ว</div></div>
     </div>
     <div class="row-btns">
       <button class="primary-btn" onclick="downloadCSV()">⬇️ ดาวน์โหลด CSV (แตกทุกข้อ)</button>
     </div>
     <button class="ghost-btn" style="width:100%;margin-top:10px" onclick="downloadJSON()">⬇️ ดาวน์โหลด JSON (ข้อมูลดิบ)</button>
-    <div class="sub" style="margin-top:14px">CSV เปิดใน Excel/Google Sheets ได้ทันที แต่ละ Level × 4 ข้อ จะถูกแตกเป็นคอลัมน์แยก พร้อม Final Suggestion ของพี่เลี้ยง</div>
+    <div class="sub" style="margin-top:14px">CSV เปิดใน Excel/Google Sheets ได้ทันที แต่ละ Crisis จะถูกแตกเป็นคอลัมน์แยก</div>
   </div>
   <div class="card" style="border-color:#e0a99f;background:#fdf4f2">
     <h2 style="color:#a3392a">⚠ ล้างข้อมูลทั้งหมด</h2>
@@ -835,14 +821,12 @@ async function doClearAll(){
 }
 function buildCSVRows(){
   const cols=["กลุ่ม","องค์กร","สถานะ"];
-  CONTENT.levels.forEach((L,li)=>{ CONTENT.steps.forEach(s=>{ cols.push(`L${li+1} ${L.name} - ${s.title}`); }); });
-  cols.push("Final Suggestion (พี่เลี้ยง)");
+  CONTENT.levels.forEach((L,li)=>{ CONTENT.steps.forEach(s=>{ cols.push(`Crisis${li+1} ${L.name} - ${s.title}`); }); });
   const rows=[cols];
   pdtRows.forEach(g=>{
-    const status=g.final_done?"รีวิวแล้ว":(g.submitted?"ส่งแล้ว":"กำลังทำ");
+    const status=g.submitted?"ส่งแล้ว":"กำลังทำ";
     const row=[g.group_no,g.org_name||"",status];
     CONTENT.levels.forEach(L=>{ const d=(g.answers&&g.answers[L.n])||{}; CONTENT.steps.forEach(s=>row.push(d[s.id]||"")); });
-    row.push(g.final_suggestion||"");
     rows.push(row);
   });
   return rows;
