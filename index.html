@@ -264,8 +264,8 @@ function mergeContent(v){
   // กันโครงสร้างพัง: บังคับให้มี 5 level + 4 step เสมอ
   const c=JSON.parse(JSON.stringify(DEFAULT_CONTENT));
   if(v.hero){ Object.keys(c.hero).forEach(k=>{ if(v.hero[k]!=null&&v.hero[k]!=="") c.hero[k]=v.hero[k]; }); }
-  if(v.steps&&Array.isArray(v.steps)) v.steps.forEach((x,i)=>{ if(c.steps[i]){c.steps[i].title=x.title||c.steps[i].title;c.steps[i].focus=x.focus||c.steps[i].focus;c.steps[i].principle=x.principle||c.steps[i].principle;if(x.iconImg!=null)c.steps[i].iconImg=x.iconImg;} });
-  if(v.levels&&Array.isArray(v.levels)) v.levels.forEach((x,i)=>{ if(c.levels[i]){c.levels[i].name=x.name||c.levels[i].name;c.levels[i].crisis=x.crisis||c.levels[i].crisis;c.levels[i].body=x.body||c.levels[i].body;if(x.quote!=null)c.levels[i].quote=x.quote;if(x.challenge!=null)c.levels[i].challenge=x.challenge;if(x.crisisImg!=null)c.levels[i].crisisImg=x.crisisImg;} });
+  if(v.steps&&Array.isArray(v.steps)) v.steps.forEach((x,i)=>{ if(c.steps[i]){if(x.title!=null)c.steps[i].title=x.title;if(x.focus!=null)c.steps[i].focus=x.focus;if(x.principle!=null)c.steps[i].principle=x.principle;if(x.iconImg!=null)c.steps[i].iconImg=x.iconImg;} });
+  if(v.levels&&Array.isArray(v.levels)) v.levels.forEach((x,i)=>{ if(c.levels[i]){if(x.name!=null)c.levels[i].name=x.name;if(x.crisis!=null)c.levels[i].crisis=x.crisis;if(x.body!=null)c.levels[i].body=x.body;if(x.quote!=null)c.levels[i].quote=x.quote;if(x.challenge!=null)c.levels[i].challenge=x.challenge;if(x.crisisImg!=null)c.levels[i].crisisImg=x.crisisImg;} });
   return c;
 }
 async function saveContent(){
@@ -400,7 +400,7 @@ function renderLevel(){
       <div><div class="lv-sub">Crisis ${viewLevel} / ${NLV()}</div><h1>${esc(L.name)}</h1></div></div>
     <div class="scenario"><div class="crisis-label">⚠ Business Crisis</div>
       ${L.crisisImg?`<img class="crisis-img crisis-img-top" src="${L.crisisImg}" alt="">`:''}
-      <div class="headline">"${esc(L.crisis)}"</div><p>${esc(L.body)}</p>${L.quote?`<div class="quote">${esc(L.quote)}</div>`:''}${L.challenge?`<div class="challenge-box"><span class="challenge-label">🎯 Challenge</span>${esc(L.challenge)}</div>`:''}</div>
+      ${L.crisis?`<div class="headline">"${esc(L.crisis)}"</div>`:''}${L.body?`<p>${esc(L.body)}</p>`:''}${L.quote?`<div class="quote">${esc(L.quote)}</div>`:''}${L.challenge?`<div class="challenge-box"><span class="challenge-label">🎯 Challenge</span>${esc(L.challenge)}</div>`:''}</div>
     ${steps}
     <div class="nav-row">
       ${viewLevel>1?`<button class="ghost-btn" onclick="prevLevel()">← Crisis ก่อน</button>`:''}
